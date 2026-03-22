@@ -523,7 +523,12 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
   <div class="about-wrap">
     <div class="about-visual reveal-l">
       <div class="about-big" id="aboutBig">
-          <span style="font-size:6rem;z-index:0;position:relative;">🔥</span>
+          <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=85"
+               alt="Dandoosh Kitchen"
+               loading="eager"
+               onerror="this.src='https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=800&q=85'"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:transform .5s;">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,4,4,.6),transparent);z-index:2;"></div>
         </div>
       <div class="about-small">
         <div class="about-small-v" id="aboutYr">2022</div>
@@ -562,25 +567,46 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
       <!-- Default specials from config, overridden by Firebase -->
       <div class="spec-card reveal">
         <div class="spec-ribbon">Premium</div>
-        <div class="spec-img">👑</div>
+        <div class="chef-badge">👨‍🍳 Chef's Pick</div>
+        <div class="spec-img" style="position:relative;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800&q=85"
+               alt="The Royal Smoke" loading="eager"
+               onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=85'"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:transform .5s;">
+          <span style="position:relative;z-index:0;font-size:4rem;">👑</span>
+        </div>
+        <div class="spec-timer">
+          <span class="spec-timer-label">⏱ Available until midnight</span>
+          <span class="spec-timer-val" id="spec-timer1">--:--:--</span>
+        </div>
         <div class="spec-body">
           <div class="spec-name">The Royal Smoke</div>
           <div class="spec-desc">Shish Tawook, Afghani Chicken & Turkish Kebab loaded over fries with BBQ sauce and jalapeños. A true royal feast in every bite.</div>
           <div class="spec-foot">
             <div class="spec-price"><span class="rs">Rs. </span>849</div>
-            <button class="btn-red" onclick="addToCart('l1','The Royal Smoke',849,'','👑')" style="padding:.6rem 1.2rem;font-size:.65rem;">Order 🔥</button>
+            <button class="btn-red" onclick="addToCart('l1','The Royal Smoke',849,'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400','👑')" style="padding:.6rem 1.2rem;font-size:.65rem;">Order 🔥</button>
           </div>
         </div>
       </div>
       <div class="spec-card reveal">
         <div class="spec-ribbon">Spicy 🌶</div>
-        <div class="spec-img">🌶</div>
+        <div class="spec-img" style="position:relative;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=800&q=85"
+               alt="The Mexici Loaded" loading="eager"
+               onerror="this.src='https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&q=85'"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:transform .5s;">
+          <span style="position:relative;z-index:0;font-size:4rem;">🌶</span>
+        </div>
+        <div class="spec-timer">
+          <span class="spec-timer-label">⏱ Available until midnight</span>
+          <span class="spec-timer-val" id="spec-timer2">--:--:--</span>
+        </div>
         <div class="spec-body">
           <div class="spec-name">The Mexici Loaded</div>
           <div class="spec-desc">Mexican-masala fries, glazed chicken, garlic sauce, Arabic ranch and spicy jalapeños. The bold one.</div>
           <div class="spec-foot">
             <div class="spec-price"><span class="rs">Rs. </span>749</div>
-            <button class="btn-red" onclick="addToCart('l2','The Mexici Loaded',749,'','🌶')" style="padding:.6rem 1.2rem;font-size:.65rem;">Order 🔥</button>
+            <button class="btn-red" onclick="addToCart('l2','The Mexici Loaded',749,'https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400','🌶')" style="padding:.6rem 1.2rem;font-size:.65rem;">Order 🔥</button>
           </div>
         </div>
       </div>
@@ -589,7 +615,8 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 </section>
 
 <!-- FLAME DIVIDER -->
-<div class="flame-div">
+<div class="flame-div" style="position:relative;">
+  <div class="flame-bg-img" style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&q=80');background-size:cover;background-position:center;opacity:.15;will-change:transform;"></div>
   <canvas class="flame-canvas" id="flameCanvas"></canvas>
   <div class="flame-text reveal">
     <h2>Every Bite Tells a <em>Story</em></h2>
@@ -602,7 +629,7 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 
 <!-- ═══ PARALLAX 1 — Between flame & menu ═══ -->
 <div class="parallax-sec" id="parallaxSec1">
-  <div class="parallax-bg-div" id="parallaxBg1" style="background:linear-gradient(135deg,#2A0808,#0A0404);"></div>
+  <div class="parallax-bg-div" id="parallaxBg1" style="background:linear-gradient(135deg,#2A0808,#0A0404);background-image:url('https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=1600&q=80');background-size:cover;background-position:center;"></div>
   <div class="parallax-overlay-div"></div>
   <div class="parallax-text reveal">
     <div class="eyebrow" style="justify-content:center;color:var(--gold);">🔥 Our Promise</div>
@@ -642,6 +669,17 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
   <div style="max-width:1260px;margin:0 auto;">
     <div class="eyebrow reveal">Why Dandoosh</div>
     <h2 class="sec-title reveal">The <em>Dandoosh</em> <span class="gold">Difference</span></h2>
+    <div style="width:100%;height:280px;overflow:hidden;margin:1.5rem 0;position:relative;" class="reveal">
+      <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=1600&q=85"
+           alt="Dandoosh Kitchen"
+           loading="lazy"
+           onerror="this.style.display='none'"
+           class="exp-banner-img" style="width:100%;height:120%;object-fit:cover;object-position:center 40%;margin-top:-10%;will-change:transform;">
+      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(10,4,4,.7) 0%,transparent 40%,transparent 60%,rgba(10,4,4,.7) 100%);"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+        <div style="font-family:'Noto Naskh Arabic',serif;font-size:clamp(2rem,5vw,4rem);font-weight:700;color:rgba(255,255,255,.08);direction:rtl;letter-spacing:.05em;">دندوش</div>
+      </div>
+    </div>
     <div class="exp-grid reveal">
       <div class="exp-card"><span class="exp-ico">🌍</span><div class="exp-title">Arabic Meets Desi</div><div class="exp-desc">We are the original fusion — bringing authentic Arabic street food techniques to the bold spices of Pakistani cuisine. Unique. Unforgettable.</div></div>
       <div class="exp-card"><span class="exp-ico">🔥</span><div class="exp-title">Charcoal Grilled</div><div class="exp-desc">Our kebabs are charcoal-grilled fresh every day. No shortcuts, no frozen stock. That smoky authentic flavor is our signature.</div></div>
@@ -655,7 +693,7 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 
 <!-- ═══ PARALLAX 2 — Before gallery ═══ -->
 <div class="parallax-sec" id="parallaxSec2">
-  <div class="parallax-bg-div" id="parallaxBg2" style="background:linear-gradient(135deg,#1E0505,#0A0404);"></div>
+  <div class="parallax-bg-div" id="parallaxBg2" style="background:linear-gradient(135deg,#1E0505,#0A0404);background-image:url('https://images.unsplash.com/photo-1544025162-d76694265947?w=1600&q=80');background-size:cover;background-position:center;"></div>
   <div class="parallax-overlay-div"></div>
   <div class="parallax-text reveal">
     <div class="eyebrow" style="justify-content:center;color:var(--gold);">📍 Find Us</div>
@@ -677,12 +715,30 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
   <div class="eyebrow reveal">Our Visuals</div>
   <h2 class="sec-title reveal">Inside <em>Dandoosh</em></h2>
   <div class="gallery-grid reveal" id="galleryGrid">
-    <div class="gal-item">🥙<div class="gal-cap">Afghani Dandoosh</div></div>
-    <div class="gal-item">🔥<div class="gal-cap">Fresh Off The Grill</div></div>
-    <div class="gal-item">👑<div class="gal-cap">The Royal Smoke</div></div>
-    <div class="gal-item">🌮<div class="gal-cap">Mexici Collection</div></div>
-    <div class="gal-item">🧆<div class="gal-cap">Sheesh Tau</div></div>
-    <div class="gal-item">🍟<div class="gal-cap">Loaded Trays</div></div>
+    <div class="gal-item">
+      <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=900&q=85" alt="Afghani Dandoosh" loading="lazy" onerror="this.style.display='none'">
+      <div class="gal-cap">Afghani Dandoosh</div>
+    </div>
+    <div class="gal-item">
+      <img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=700&q=85" alt="Fresh Off The Grill" loading="lazy" onerror="this.style.display='none'">
+      <div class="gal-cap">Fresh Off The Grill</div>
+    </div>
+    <div class="gal-item">
+      <img src="https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=700&q=85" alt="The Royal Smoke" loading="lazy" onerror="this.style.display='none'">
+      <div class="gal-cap">The Royal Smoke</div>
+    </div>
+    <div class="gal-item">
+      <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=900&q=85" alt="Mexici Collection" loading="lazy" onerror="this.style.display='none'">
+      <div class="gal-cap">Mexici Collection</div>
+    </div>
+    <div class="gal-item">
+      <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=700&q=85" alt="Sheesh Tau" loading="lazy" onerror="this.style.display='none'">
+      <div class="gal-cap">Sheesh Tau</div>
+    </div>
+    <div class="gal-item">
+      <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=700&q=85" alt="Loaded Fries" loading="lazy" onerror="this.style.display='none'">
+      <div class="gal-cap">Loaded Trays</div>
+    </div>
   </div>
 </section>
 
@@ -700,7 +756,7 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 </section>
 
 <!-- ORDER CTA -->
-<section id="order" class="order-sec">
+<section id="order" class="order-sec" style="background-image:url('https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=1600&q=75');background-size:cover;background-position:center;background-blend-mode:overlay;">
   <div class="order-inner reveal">
     <h2>Hungry? <em>Order Now.</em></h2>
     <p>WhatsApp us directly or order on FoodPanda. Hot, fresh, and delivered to your door — or walk in and experience Dandoosh yourself.</p>
@@ -1266,36 +1322,47 @@ window.addEventListener('scroll',()=>{
   const hero=$('heroEl');
   if(hero){ hero.querySelectorAll('.slide-bg').forEach(bg=>{ bg.style.transform=`translateY(${y*.2}px) scale(1.08)`; }); }
 
-  // Parallax sections
-  ['parallaxSec1','parallaxSec2'].forEach(id=>{
-    const sec=$(id); if(!sec) return;
-    const bg=sec.querySelector('.parallax-bg-div'); if(!bg) return;
-    const rect=sec.getBoundingClientRect();
-    if(rect.top<window.innerHeight && rect.bottom>0){
-      const progress=(window.innerHeight-rect.top)/(window.innerHeight+rect.height);
-      bg.style.transform=`translateY(${(progress-.5)*130}px)`;
-    }
-  });
-
-  // About image parallax
-  const aboutBig=$('aboutBig');
-  if(aboutBig){
-    const rect=aboutBig.getBoundingClientRect();
-    if(rect.top<window.innerHeight&&rect.bottom>0){
-      const img=aboutBig.querySelector('img');
-      if(img){ const p=(window.innerHeight-rect.top)/(window.innerHeight+rect.height); img.style.transform=`translateY(${(p-.5)*40}px) scale(1.08)`; }
-    }
+  // ── PARALLAX ENGINE — all image sections ─────────────────────
+  function applyParallax(el, img, strength, scale) {
+    if (!el || !img) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.top > window.innerHeight || rect.bottom < 0) return;
+    const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+    const offset   = (progress - .5) * strength;
+    img.style.transform = `translateY(${offset}px) scale(${scale})`;
   }
 
-  // Gallery items subtle parallax
-  document.querySelectorAll('.gal-item').forEach(item=>{
-    const rect=item.getBoundingClientRect();
-    if(rect.top<window.innerHeight&&rect.bottom>0){
-      const img=item.querySelector('img'); if(!img) return;
-      const p=(window.innerHeight-rect.top)/(window.innerHeight+rect.height);
-      img.style.transform=`translateY(${(p-.5)*30}px) scale(1.07)`;
+  // Parallax sections (big full-screen ones)
+  ['parallaxSec1','parallaxSec2'].forEach(id => {
+    const sec = $(id); if (!sec) return;
+    const bg  = sec.querySelector('.parallax-bg-div'); if (!bg) return;
+    const rect= sec.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      const p = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+      bg.style.transform = `translateY(${(p-.5)*130}px)`;
     }
   });
+
+  // About section image
+  applyParallax($('aboutBig'), $('aboutBig')?.querySelector('img'), 50, 1.1);
+
+  // Gallery images — each moves at slightly different speed
+  document.querySelectorAll('.gal-item').forEach((item, i) => {
+    applyParallax(item, item.querySelector('img'), 25 + i*3, 1.08);
+  });
+
+  // Exp banner image
+  const expBanner = document.querySelector('.exp-banner-img');
+  if (expBanner) applyParallax(expBanner.parentElement, expBanner, 45, 1.1);
+
+  // Spec card images
+  document.querySelectorAll('.spec-img img').forEach(img => {
+    applyParallax(img.closest('.spec-card'), img, 20, 1.06);
+  });
+
+  // Flame divider background
+  const flameBg = document.querySelector('.flame-div .flame-bg-img');
+  if (flameBg) applyParallax(flameBg.parentElement, flameBg, 60, 1.15);
 
   updateSdots();
 },{passive:true});
