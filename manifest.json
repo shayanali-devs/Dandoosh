@@ -1,0 +1,20 @@
+{
+  "name": "Dandoosh — Where Arabic Meets Desi",
+  "short_name": "Dandoosh",
+  "description": "Order authentic Arabic-Desi fusion food from Dandoosh. Fast delivery across Lahore.",
+  "start_url": "/app.html",
+  "display": "standalone",
+  "background_color": "#0A0404",
+  "theme_color": "#D42B2B",
+  "orientation": "portrait-primary",
+  "categories": ["food", "shopping"],
+  "icons": [
+    { "src": "https://emojicdn.elk.sh/🔥?style=apple", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "https://emojicdn.elk.sh/🔥?style=apple", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    { "name": "Order Now", "url": "/app.html#order", "description": "Place an order" },
+    { "name": "View Menu", "url": "/app.html#menu", "description": "Browse our menu" }
+  ]
+}

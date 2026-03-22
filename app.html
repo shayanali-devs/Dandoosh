@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#D42B2B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Dandoosh App</title>
+<script src="dandoosh-config.js"></script>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#D42B2B;--red-deep:#A01E1E;--dark:#0A0404;--surface:#140808;
+  --card:#1A0A0A;--text:#FFF5F0;--muted:#8A6060;--gold:#E8B84B;
+  --border:rgba(212,43,43,.18);--green:#22c55e;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);}
+
+/* ── APP SHELL ── */
+.app{display:flex;flex-direction:column;height:100%;height:100dvh;max-width:480px;margin:0 auto;position:relative;background:var(--dark);}
+
+/* ── STATUS BAR SPACER ── */
+.status-bar{height:var(--safe-top);background:var(--red-deep);flex-shrink:0;}
+
+/* ── HEADER ── */
+.app-header{background:var(--red-deep);padding:.9rem 1.2rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(212,43,43,.3);}
+.app-logo{display:flex;align-items:center;gap:.6rem;}
+.app-logo-mark{width:36px;height:36px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;clip-path:polygon(0 0,80% 0,100% 20%,100% 100%,20% 100%,0 80%);}
+.app-logo-text{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#fff;}
+.app-header-right{display:flex;align-items:center;gap:.7rem;}
+.header-icon{background:rgba(255,255,255,.1);border:none;color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;transition:background .2s;position:relative;}
+.header-icon:active{background:rgba(255,255,255,.2);}
+.header-badge{position:absolute;top:-3px;right:-3px;background:var(--gold);color:var(--dark);border-radius:50%;width:16px;height:16px;font-size:.55rem;font-weight:800;display:flex;align-items:center;justify-content:center;transform:scale(0);transition:transform .3s;}
+.header-badge.on{transform:scale(1);}
+
+/* ── PAGES ── */
+.pages{flex:1;overflow:hidden;position:relative;}
+.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-bottom:calc(var(--safe-bot) + 70px);}
+.page::-webkit-scrollbar{display:none;}
+.page.active{display:block;}
+.page:not(.active){display:none;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);flex-shrink:0;padding-bottom:var(--safe-bot);padding-bottom:max(var(--safe-bot),0px);}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.6rem .4rem .5rem;cursor:pointer;transition:all .2s;position:relative;border:none;background:transparent;color:var(--muted);}
+.nav-item.on{color:var(--red);}
+.nav-item::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--red);transform:scaleX(0);transition:transform .3s;}
+.nav-item.on::after{transform:scaleX(1);}
+.nav-ico{font-size:1.3rem;transition:transform .2s;}
+.nav-item.on .nav-ico{transform:scale(1.15);}
+.nav-lbl{font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-top:.18rem;}
+
+/* ── HOME PAGE ── */
+.home-hero{position:relative;height:220px;overflow:hidden;background:linear-gradient(135deg,#2A0808,#0A0404);}
+.home-hero-img{width:100%;height:100%;object-fit:cover;opacity:.55;}
+.home-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,4,4,.95) 0%,rgba(10,4,4,.3) 100%);}
+.home-hero-content{position:absolute;bottom:1.2rem;left:1.2rem;right:1.2rem;}
+.home-hero-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;color:#fff;line-height:1;}
+.home-hero-title em{font-style:italic;color:var(--red);}
+.home-hero-sub{font-size:.72rem;color:rgba(255,245,240,.7);margin-top:.3rem;}
+.home-hero-chip{display:inline-flex;align-items:center;gap:.4rem;background:var(--red);color:#fff;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.22rem .65rem;font-weight:700;margin-bottom:.6rem;}
+.home-hero-chip::before{content:'';width:5px;height:5px;background:var(--gold);border-radius:50%;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* QUICK ORDER STRIP */
+.quick-strip{padding:.9rem 1.2rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.qs-title{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:.7rem;}
+.qs-row{display:flex;gap:.6rem;overflow-x:auto;padding-bottom:.3rem;}
+.qs-row::-webkit-scrollbar{display:none;}
+.qs-item{flex-shrink:0;background:var(--card);border:1px solid var(--border);padding:.6rem .9rem;display:flex;align-items:center;gap:.45rem;cursor:pointer;transition:all .25s;white-space:nowrap;}
+.qs-item:active{transform:scale(.96);background:rgba(212,43,43,.1);}
+.qs-item.on{border-color:var(--red);background:rgba(212,43,43,.08);}
+.qs-em{font-size:1.1rem;}
+.qs-name{font-size:.72rem;font-weight:600;color:var(--text);}
+.qs-price{font-size:.62rem;color:var(--gold);font-weight:700;}
+
+/* SPECIALS ROW */
+.section-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;padding:.9rem 1.2rem .3rem;}
+.section-title em{font-style:italic;color:var(--red);}
+
+/* HORIZONTAL SCROLL CARDS */
+.h-scroll{display:flex;gap:.8rem;overflow-x:auto;padding:.5rem 1.2rem 1rem;scroll-snap-type:x mandatory;}
+.h-scroll::-webkit-scrollbar{display:none;}
+.hcard{flex-shrink:0;width:200px;background:var(--card);border:1px solid var(--border);overflow:hidden;scroll-snap-align:start;transition:transform .2s;}
+.hcard:active{transform:scale(.97);}
+.hcard-img{width:100%;height:130px;object-fit:cover;background:var(--surface);}
+.hcard-img-placeholder{width:100%;height:130px;background:linear-gradient(135deg,var(--surface),var(--card));display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.hcard-body{padding:.8rem;}
+.hcard-name{font-weight:700;font-size:.88rem;margin-bottom:.2rem;}
+.hcard-price{font-size:.78rem;color:var(--gold);font-weight:700;}
+.hcard-btn{width:100%;background:var(--red);color:#fff;border:none;padding:.5rem;font-family:'Outfit',sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;cursor:pointer;margin-top:.6rem;transition:all .2s;}
+.hcard-btn:active{background:var(--red-deep);}
+
+/* PROMO BANNER */
+.promo-banner{margin:0 1.2rem;background:linear-gradient(135deg,#2A0808,var(--red-deep));border:1px solid rgba(212,43,43,.35);padding:1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;position:relative;overflow:hidden;}
+.promo-banner::before{content:'دندوش';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:rgba(255,255,255,.04);}
+.promo-text{flex:1;}
+.promo-tag{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.3rem;}
+.promo-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#fff;line-height:1.2;}
+.promo-sub{font-size:.68rem;color:rgba(255,245,240,.65);margin-top:.2rem;}
+.promo-btn{background:var(--gold);color:var(--dark);border:none;padding:.5rem 1rem;font-family:'Outfit',sans-serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s;}
+.promo-btn:active{transform:scale(.96);}
+
+/* CATEGORIES GRID */
+.cats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;padding:.5rem 1.2rem;}
+.cat-item{background:var(--card);border:1px solid var(--border);padding:1rem .6rem;text-align:center;cursor:pointer;transition:all .2s;}
+.cat-item:active{transform:scale(.95);background:rgba(212,43,43,.08);}
+.cat-em{font-size:1.5rem;display:block;margin-bottom:.4rem;}
+.cat-nm{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+
+/* ── MENU PAGE ── */
+.menu-search{margin:1rem 1.2rem;position:relative;}
+.menu-search input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:.75rem 1rem .75rem 2.5rem;font-family:'Outfit',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s;}
+.menu-search input:focus{border-color:var(--red);}
+.menu-search input::placeholder{color:var(--muted);}
+.menu-search::before{content:'🔍';position:absolute;left:.75rem;top:50%;transform:translateY(-50%);font-size:.85rem;}
+.menu-cats{display:flex;gap:.5rem;padding:0 1.2rem;overflow-x:auto;margin-bottom:.8rem;}
+.menu-cats::-webkit-scrollbar{display:none;}
+.mcat-btn{flex-shrink:0;padding:.45rem 1rem;background:transparent;border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .2s;font-weight:600;}
+.mcat-btn.on{background:var(--red);color:#fff;border-color:var(--red);}
+.mcat-btn:active{transform:scale(.95);}
+
+/* MENU LIST */
+.menu-list{padding:0 1.2rem;}
+.menu-item{display:flex;gap:.9rem;padding:1rem 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .2s;}
+.menu-item:active{background:rgba(212,43,43,.04);}
+.menu-item:last-child{border:none;}
+.mi-img{width:82px;height:82px;object-fit:cover;background:var(--card);flex-shrink:0;position:relative;overflow:hidden;}
+.mi-img img{width:100%;height:100%;object-fit:cover;}
+.mi-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;}
+.mi-info{flex:1;display:flex;flex-direction:column;justify-content:space-between;}
+.mi-name{font-weight:700;font-size:.92rem;line-height:1.25;margin-bottom:.25rem;}
+.mi-desc{font-size:.7rem;color:var(--muted);line-height:1.5;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;}
+.mi-foot{display:flex;align-items:center;justify-content:space-between;margin-top:.4rem;}
+.mi-price{font-size:.92rem;font-weight:700;color:var(--gold);}
+.mi-add{background:var(--red);color:#fff;border:none;width:30px;height:30px;font-size:1.1rem;font-weight:700;cursor:pointer;clip-path:polygon(0 0,80% 0,100% 20%,100% 100%,20% 100%,0 80%);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.mi-add:active{transform:scale(.9);}
+.mi-add:disabled{background:var(--muted);clip-path:none;}
+.mi-badge{font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .45rem;font-weight:800;margin-bottom:.3rem;display:inline-block;}
+.mb-best{background:var(--gold);color:var(--dark);}
+.mb-spicy{background:var(--red);color:#fff;}
+.mb-prem{background:linear-gradient(135deg,var(--gold),#b8860b);color:var(--dark);}
+.mb-deal{background:var(--green);color:#fff;}
+
+/* ── CART PAGE ── */
+.cart-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60%;text-align:center;padding:2rem;gap:1rem;}
+.ces-icon{font-size:4rem;opacity:.3;}
+.ces-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--text);}
+.ces-sub{font-size:.8rem;color:var(--muted);}
+.cart-list{padding:0 1.2rem;}
+.cart-row{display:flex;gap:.9rem;padding:1rem 0;border-bottom:1px solid var(--border);align-items:center;}
+.cr-img{width:62px;height:62px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:1.5rem;overflow:hidden;flex-shrink:0;}
+.cr-img img{width:100%;height:100%;object-fit:cover;}
+.cr-info{flex:1;}
+.cr-name{font-weight:700;font-size:.9rem;}
+.cr-price{font-size:.78rem;color:var(--gold);margin-top:.1rem;}
+.cr-ctrl{display:flex;align-items:center;gap:.5rem;margin-top:.5rem;}
+.cr-btn{background:rgba(212,43,43,.15);border:1px solid var(--border);color:var(--red);width:28px;height:28px;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all .2s;}
+.cr-btn:active{background:var(--red);color:#fff;}
+.cr-qty{font-size:.85rem;min-width:18px;text-align:center;font-weight:700;}
+.cr-rm{background:transparent;border:none;color:var(--muted);font-size:.8rem;cursor:pointer;margin-left:auto;}
+.cart-summary{margin:0 1.2rem 1rem;background:var(--card);border:1px solid var(--border);padding:1.1rem;}
+.cs-row{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);padding:.3rem 0;}
+.cs-row.total{font-size:1rem;font-weight:700;color:var(--text);border-top:1px solid var(--border);padding-top:.7rem;margin-top:.4rem;}
+.cs-row.total span:last-child{color:var(--gold);}
+.checkout-btn-full{display:block;width:calc(100% - 2.4rem);margin:0 1.2rem;padding:1rem;background:var(--red);color:#fff;border:none;font-family:'Outfit',sans-serif;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;cursor:pointer;text-align:center;transition:all .3s;}
+.checkout-btn-full:active{background:var(--red-deep);}
+
+/* ── ORDER FORM ── */
+.order-form{padding:0 1.2rem;}
+.of-section{margin-bottom:1.2rem;}
+.of-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-bottom:.4rem;}
+.of-input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:.78rem 1rem;font-family:'Outfit',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;}
+.of-input:focus{border-color:var(--red);}
+.of-input::placeholder{color:var(--muted);}
+.of-select{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:.78rem 1rem;font-family:'Outfit',sans-serif;font-size:.88rem;outline:none;appearance:none;}
+.of-select option{background:var(--surface);}
+.type-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem;}
+.type-tab{padding:.65rem .5rem;background:var(--card);border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;text-align:center;transition:all .2s;}
+.type-tab.on{background:var(--red);color:#fff;border-color:var(--red);}
+.type-tab:active{transform:scale(.97);}
+
+/* ── PROFILE PAGE ── */
+.profile-top{background:linear-gradient(135deg,var(--red-deep),var(--dark));padding:2rem 1.2rem 1.5rem;text-align:center;}
+.profile-avatar{width:70px;height:70px;background:rgba(212,43,43,.2);border:2px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto .8rem;}
+.profile-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;}
+.profile-phone{font-size:.75rem;color:rgba(255,245,240,.6);margin-top:.2rem;}
+.loyalty-card{margin:1rem 1.2rem;background:linear-gradient(135deg,#2A0808,var(--card));border:1px solid rgba(232,184,75,.3);padding:1.3rem;position:relative;overflow:hidden;}
+.loyalty-card::before{content:'دندوش';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:rgba(232,184,75,.06);}
+.lc-label{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.4rem;}
+.lc-pts{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--gold);line-height:1;}
+.lc-sub{font-size:.7rem;color:var(--muted);margin-top:.3rem;}
+.lc-bar-wrap{background:rgba(232,184,75,.1);height:4px;border-radius:2px;margin-top:.8rem;}
+.lc-bar{background:var(--gold);height:100%;border-radius:2px;transition:width 1s ease;}
+.profile-actions{padding:0 1.2rem;display:flex;flex-direction:column;gap:.5rem;}
+.pa-item{display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--card);border:1px solid var(--border);cursor:pointer;transition:all .2s;}
+.pa-item:active{background:rgba(212,43,43,.05);}
+.pa-left{display:flex;align-items:center;gap:.75rem;}
+.pa-ico{font-size:1.2rem;}
+.pa-title{font-size:.85rem;font-weight:600;}
+.pa-arrow{color:var(--muted);font-size:.75rem;}
+.section-hd{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1.2rem .3rem;}
+.section-hd .see-all{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);cursor:pointer;font-weight:700;}
+.orders-list{padding:0 1.2rem;}
+.order-row{background:var(--card);border:1px solid var(--border);padding:1rem;margin-bottom:.6rem;}
+.or-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;}
+.or-id{font-family:'Outfit',monospace;font-size:.7rem;color:var(--muted);}
+.or-status{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .55rem;font-weight:700;}
+.or-items{font-size:.78rem;color:var(--muted);}
+.or-total{font-size:.88rem;font-weight:700;color:var(--gold);margin-top:.4rem;}
+
+/* ── CHECKOUT MODAL (in-app) ── */
+.modal-sheet{position:fixed;inset:0;z-index:5000;display:flex;align-items:flex-end;pointer-events:none;}
+.modal-sheet.show{pointer-events:all;}
+.modal-backdrop{position:absolute;inset:0;background:rgba(10,4,4,.82);opacity:0;transition:opacity .3s;backdrop-filter:blur(4px);}
+.modal-sheet.show .modal-backdrop{opacity:1;}
+.modal-content{position:relative;width:100%;background:var(--surface);border-top:1px solid var(--border);border-radius:18px 18px 0 0;padding:1.5rem 1.2rem;padding-bottom:calc(1.5rem + var(--safe-bot));max-height:88dvh;overflow-y:auto;transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.46,.45,.94);}
+.modal-sheet.show .modal-content{transform:translateY(0);}
+.modal-drag{width:40px;height:4px;background:rgba(255,245,240,.15);border-radius:2px;margin:0 auto .8rem;}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:1.2rem;}
+
+/* ── GOOGLE AUTH ── */
+.auth-overlay{position:fixed;inset:0;background:rgba(10,4,4,.92);z-index:8000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(8px);}
+.auth-overlay.show{opacity:1;pointer-events:all;}
+.auth-box{background:var(--surface);border:1px solid var(--border);padding:2rem 1.5rem;max-width:340px;width:90%;text-align:center;transform:translateY(20px);transition:transform .3s;}
+.auth-overlay.show .auth-box{transform:translateY(0);}
+.auth-spinner{width:36px;height:36px;border:3px solid rgba(212,43,43,.2);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:calc(var(--safe-top) + 3.5rem);left:50%;transform:translateX(-50%) translateY(-16px);background:var(--card);border:1px solid var(--red);border-left:3px solid var(--gold);color:var(--text);padding:.75rem 1.4rem;font-size:.78rem;z-index:9000;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;max-width:85vw;overflow:hidden;text-overflow:ellipsis;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── LOADING ── */
+.skeleton{background:linear-gradient(90deg,var(--card) 25%,rgba(212,43,43,.06) 50%,var(--card) 75%);background-size:200%;animation:sk 1.5s infinite;}
+@keyframes sk{0%{background-position:-200%;}100%{background-position:200%;}}
+
+/* ── SPLASH SCREEN ── */
+.splash{position:fixed;inset:0;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s;}
+.splash.hide{opacity:0;pointer-events:none;}
+.splash-logo{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:var(--red);animation:splashPop .6s cubic-bezier(.175,.885,.32,1.275) both;}
+.splash-sub{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);margin-top:.5rem;animation:splashFade .6s .3s both;}
+.splash-tagline{font-size:.85rem;color:rgba(255,245,240,.5);margin-top:.4rem;animation:splashFade .6s .5s both;}
+.splash-dot{width:40px;height:2px;background:var(--red);margin-top:2rem;animation:splashBar .8s .7s both;}
+@keyframes splashPop{from{transform:scale(.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes splashFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes splashBar{from{width:0;opacity:0;}to{width:40px;opacity:1;}}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="splash" id="splash">
+  <div class="splash-logo">دندوش</div>
+  <div class="splash-sub">Dandoosh</div>
+  <div class="splash-tagline">Where Arabic Meets Desi</div>
+  <div class="splash-dot"></div>
+</div>
+
+<!-- APP SHELL -->
+<div class="app">
+  <div class="status-bar"></div>
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="app-logo">
+      <div class="app-logo-mark">دد</div>
+      <div class="app-logo-text">Dandoosh</div>
+    </div>
+    <div class="app-header-right">
+      <button class="header-icon" onclick="navTo('search')">🔍</button>
+      <button class="header-icon" onclick="navTo('cart')">
+        🛒<span class="header-badge" id="headerBadge">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- PAGES -->
+  <div class="pages">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <!-- Hero -->
+      <div class="home-hero">
+        <img class="home-hero-img" src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=800&q=80" alt="Dandoosh" onerror="this.style.display='none'">
+        <div class="home-hero-overlay"></div>
+        <div class="home-hero-content">
+          <div class="home-hero-chip">🔥 Now Open</div>
+          <div class="home-hero-title">Arabic Meets<br><em>Desi.</em></div>
+          <div class="home-hero-sub">Fresh every day · 0309 009 0123</div>
+        </div>
+      </div>
+
+      <!-- Quick Order Strip -->
+      <div class="quick-strip">
+        <div class="qs-title">Quick Add</div>
+        <div class="qs-row" id="quickRow"></div>
+      </div>
+
+      <!-- Promo -->
+      <div class="promo-banner" style="margin-top:1rem;">
+        <div class="promo-text">
+          <div class="promo-tag">🎯 Best Deal</div>
+          <div class="promo-title">Make It a Meal</div>
+          <div class="promo-sub">Any sandwich + fries + drink = Rs. 349 combo</div>
+        </div>
+        <button class="promo-btn" onclick="addItemById('s2')">Add Rs.349</button>
+      </div>
+
+      <!-- Specials -->
+      <div class="section-hd" style="margin-top:1rem;">
+        <div class="section-title" style="padding:0;">Signature <em>Trays</em></div>
+        <div class="see-all" onclick="navTo('menu')">See all →</div>
+      </div>
+      <div class="h-scroll" id="specialsRow"></div>
+
+      <!-- Categories -->
+      <div class="section-title" style="margin-top:.5rem;">Browse <em>Menu</em></div>
+      <div class="cats-grid" id="homeCats">
+        <div class="cat-item" onclick="navTo('menu');filterMenuCat('Dandoosh')"><span class="cat-em">🥙</span><div class="cat-nm">Dandoosh</div></div>
+        <div class="cat-item" onclick="navTo('menu');filterMenuCat('Loaded Trays')"><span class="cat-em">👑</span><div class="cat-nm">Loaded</div></div>
+        <div class="cat-item" onclick="navTo('menu');filterMenuCat('Sides & Drinks')"><span class="cat-em">🍟</span><div class="cat-nm">Sides</div></div>
+      </div>
+
+      <!-- Order on WhatsApp -->
+      <div style="padding:1rem 1.2rem;">
+        <button onclick="orderOnWhatsApp()" style="width:100%;background:#25D366;color:#fff;border:none;padding:.9rem;font-family:'Outfit',sans-serif;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.5rem;">📲 Order on WhatsApp</button>
+      </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="page" id="page-menu">
+      <div class="menu-search"><input type="search" placeholder="Search menu..." id="menuSearch" oninput="filterMenuSearch(this.value)"></div>
+      <div class="menu-cats" id="menuCats"></div>
+      <div class="menu-list" id="menuList"></div>
+    </div>
+
+    <!-- CART -->
+    <div class="page" id="page-cart">
+      <div style="padding:.9rem 1.2rem;"><div class="section-title" style="padding:0;">Your <em>Order</em></div></div>
+      <div id="cartPageContent"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+
+      <!-- NOT LOGGED IN STATE -->
+      <div id="profileLoggedOut">
+        <div style="padding:2.5rem 1.2rem;text-align:center;">
+          <div style="font-size:3.5rem;margin-bottom:1rem;">🔥</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:.5rem;">Join Dandoosh</div>
+          <div style="font-size:.82rem;color:var(--muted);line-height:1.7;margin-bottom:2rem;">Sign in with Google to earn loyalty points, track your orders, and get exclusive deals.</div>
+          <button onclick="signInGoogle()" style="width:100%;background:#fff;color:#333;border:none;padding:.95rem 1.2rem;font-family:Outfit,sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.75rem;margin-bottom:.8rem;transition:all .2s;">
+            <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+            Continue with Google
+          </button>
+          <div style="font-size:.7rem;color:var(--muted);">We only use your name and email. No spam, ever.</div>
+        </div>
+        <div style="margin:0 1.2rem;background:var(--card);border:1px solid var(--border);padding:1.2rem;">
+          <div style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:.8rem;">⭐ Loyalty Rewards</div>
+          <div style="font-size:.82rem;color:var(--muted);line-height:1.8;">
+            Every Rs.100 you spend = 1 point<br>
+            10 points = Rs.1 off your next order<br>
+            Points saved to your Google account<br>
+            Never expire · Use on any order
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGGED IN STATE -->
+      <div id="profileLoggedIn" style="display:none">
+        <div class="profile-top">
+          <div class="profile-avatar" id="profileAvatar">🙋</div>
+          <div class="profile-name" id="profileName">Guest</div>
+          <div class="profile-phone" id="profileEmail" style="color:rgba(255,245,240,.55);font-size:.72rem;"></div>
+        </div>
+        <div class="loyalty-card">
+          <div class="lc-label">⭐ Loyalty Points</div>
+          <div class="lc-pts" id="loyPoints">0</div>
+          <div class="lc-sub">= Rs. <span id="loyValue">0</span> discount · <span id="loyOrders">0</span> orders</div>
+          <div class="lc-bar-wrap"><div class="lc-bar" id="loyBar" style="width:0%"></div></div>
+        </div>
+        <div style="height:.6rem;"></div>
+        <div class="profile-actions">
+          <div class="pa-item" onclick="orderOnWhatsApp()"><div class="pa-left"><span class="pa-ico">📲</span><span class="pa-title">Order on WhatsApp</span></div><span class="pa-arrow">→</span></div>
+          <div class="pa-item" onclick="window.open(DANDOOSH.foodpanda,'_blank')"><div class="pa-left"><span class="pa-ico">🐼</span><span class="pa-title">Order on FoodPanda</span></div><span class="pa-arrow">→</span></div>
+          <div class="pa-item" onclick="window.open('tel:'+DANDOOSH.phone)"><div class="pa-left"><span class="pa-ico">📞</span><span class="pa-title">Call Us — 0309 009 0123</span></div><span class="pa-arrow">→</span></div>
+          <div class="pa-item" onclick="window.open('index.html','_blank')"><div class="pa-left"><span class="pa-ico">🌐</span><span class="pa-title">Open Full Website</span></div><span class="pa-arrow">→</span></div>
+          <div class="pa-item" onclick="doSignOut()" style="border-color:rgba(212,43,43,.3)"><div class="pa-left"><span class="pa-ico">🚪</span><span class="pa-title" style="color:var(--red)">Sign Out</span></div><span class="pa-arrow" style="color:var(--red)">→</span></div>
+        </div>
+        <div style="height:1rem;"></div>
+        <div class="section-hd"><div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;">Your <em>Orders</em></div></div>
+        <div class="orders-list" id="recentOrders"><div style="padding:1rem;color:var(--muted);font-size:.82rem;">No orders yet — place your first order!</div></div>
+      </div>
+
+    </div>
+
+    <!-- SEARCH page (reuses menu with focus) -->
+    <div class="page" id="page-search">
+      <div class="menu-search" style="margin-top:1rem;"><input type="search" placeholder="Search anything..." id="searchInput2" oninput="filterMenuSearch(this.value)" autofocus></div>
+      <div class="menu-list" id="searchList"></div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item on" onclick="navTo('home')"><span class="nav-ico">🏠</span><span class="nav-lbl">Home</span></button>
+    <button class="nav-item" onclick="navTo('menu')"><span class="nav-ico">🥙</span><span class="nav-lbl">Menu</span></button>
+    <button class="nav-item" onclick="navTo('cart')"><span class="nav-ico">🛒</span><span class="nav-lbl">Cart</span></button>
+    <button class="nav-item" onclick="navTo('profile')"><span class="nav-ico">👤</span><span class="nav-lbl">Profile</span></button>
+  </nav>
+</div>
+
+<!-- AUTH LOADING OVERLAY -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-spinner"></div>
+    <div style="font-size:.85rem;color:var(--muted);" id="authMsg">Signing in with Google...</div>
+  </div>
+</div>
+
+<!-- CHECKOUT SHEET -->
+<div class="modal-sheet" id="checkoutSheet">
+  <div class="modal-backdrop" onclick="closeCheckoutSheet()"></div>
+  <div class="modal-content">
+    <div class="modal-drag"></div>
+    <div class="modal-title">Confirm Order 🔥</div>
+    <div id="sheetOrderSummary" style="background:var(--card);border:1px solid var(--border);padding:.9rem;margin-bottom:1rem;border-radius:2px;"></div>
+    <div class="type-tabs">
+      <div class="type-tab on" onclick="setOrderType('delivery',this)">🛵 Delivery</div>
+      <div class="type-tab" onclick="setOrderType('pickup',this)">🏃 Pickup</div>
+      <div class="type-tab" onclick="setOrderType('dine',this)">🪑 Dine In</div>
+    </div>
+    <div class="order-form">
+      <div class="of-section">
+        <label class="of-label">Your Name *</label>
+        <input class="of-input" id="sheetName" placeholder="Muhammad Ahmed">
+      </div>
+      <div class="of-section">
+        <label class="of-label">Phone Number *</label>
+        <input class="of-input" id="sheetPhone" type="tel" placeholder="+92 300 1234567">
+      </div>
+      <div class="of-section" id="sheetAddrWrap">
+        <label class="of-label">Delivery Address</label>
+        <textarea class="of-input" id="sheetAddr" placeholder="House #, Street, Area" style="min-height:65px;resize:none;"></textarea>
+      </div>
+      <div class="of-section">
+        <label class="of-label">Special Note</label>
+        <input class="of-input" id="sheetNote" placeholder="Extra sauce, less spicy...">
+      </div>
+      <button onclick="placeOrderApp()" style="width:100%;padding:1rem;background:var(--red);color:#fff;border:none;font-family:'Outfit',sans-serif;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;cursor:pointer;margin-top:.5rem;transition:all .3s;">Place Order 🔥</button>
+      <button onclick="closeCheckoutSheet()" style="width:100%;padding:.75rem;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;margin-top:.5rem;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="appToast"></div>
+
+<script type="module">
+import { initializeApp }      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, onValue, update, get, push }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+         getRedirectResult, onAuthStateChanged, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const CFG      = window.DANDOOSH;
+const app      = initializeApp(CFG.firebase);
+const db       = getDatabase(app);
+const auth     = getAuth(app);
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: 'select_account' });
+
+// ── SPLASH ───────────────────────────────────────────────────
+setTimeout(() => document.getElementById('splash').classList.add('hide'), 1600);
+
+// ── SERVICE WORKER ───────────────────────────────────────────
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+// ── STATE ────────────────────────────────────────────────────
+let cart=[], allItems={}, currentCat='', orderType='delivery';
+let currentUser = null; // Firebase Auth user
+const $ = id => document.getElementById(id);
+
+// ── NAV ──────────────────────────────────────────────────────
+window.navTo = page => {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
+  $('page-'+page)?.classList.add('active');
+  const navMap={home:0,menu:1,cart:2,profile:3};
+  const idx=navMap[page];
+  if(idx!==undefined) document.querySelectorAll('.nav-item')[idx]?.classList.add('on');
+  if(page==='cart') renderCartPage();
+  if(page==='search') setTimeout(()=>$('searchInput2')?.focus(), 100);
+};
+
+// ── MENU DATA ────────────────────────────────────────────────
+function getItemsFromConfig() {
+  const items={};
+  CFG.menuData.items.forEach(item=>{ items[item.id]={...item,active:true}; });
+  return items;
+}
+
+onValue(ref(db,'menu'), snap => {
+  allItems = snap.exists() ? snap.val() : getItemsFromConfig();
+  if(!Object.keys(allItems).length) allItems = getItemsFromConfig();
+  renderMenuPage(); renderHomeSpecials(); renderQuickStrip();
+});
+
+// Fallback if Firebase slow
+setTimeout(()=>{
+  if(!Object.keys(allItems).length){ allItems=getItemsFromConfig(); renderMenuPage(); renderHomeSpecials(); renderQuickStrip(); }
+},2000);
+
+// ── HOME ─────────────────────────────────────────────────────
+function renderQuickStrip(){
+  const row=$('quickRow'); if(!row) return;
+  const quick=Object.entries(allItems).filter(([,i])=>i.active!==false).slice(0,6);
+  row.innerHTML=quick.map(([id,i])=>`
+    <div class="qs-item" onclick="addToCart('${id}','${(i.name||'').replace(/'/g,"\\'")}',${i.price},'${i.image||''}','${i.emoji||'🥙'}')">
+      <span class="qs-em">${i.emoji||'🥙'}</span>
+      <div><div class="qs-name">${i.name}</div><div class="qs-price">Rs.${Number(i.price).toLocaleString()}</div></div>
+    </div>`).join('');
+}
+
+function renderHomeSpecials(){
+  const row=$('specialsRow'); if(!row) return;
+  const specials=Object.entries(allItems).filter(([,i])=>i.badge&&['premium','bestseller'].includes(i.badge)&&i.active!==false);
+  if(!specials.length) return;
+  row.innerHTML=specials.map(([id,i])=>`
+    <div class="hcard">
+      ${i.image
+        ?`<img class="hcard-img" src="${i.image}" alt="${i.name}" loading="lazy" onerror="this.style.display='none'"><div class="hcard-img-placeholder" style="display:none">${i.emoji||'🔥'}</div>`
+        :`<div class="hcard-img-placeholder">${i.emoji||'🔥'}</div>`}
+      <div class="hcard-body">
+        <div class="hcard-name">${i.name}</div>
+        <div class="hcard-price">Rs.${Number(i.price).toLocaleString()}</div>
+        <button class="hcard-btn" onclick="addToCart('${id}','${(i.name||'').replace(/'/g,"\\'")}',${i.price},'${i.image||''}','${i.emoji||'🔥'}')">Add to Cart</button>
+      </div>
+    </div>`).join('');
+}
+
+window.addItemById = id => {
+  const item=allItems[id]; if(!item) return;
+  addToCart(id,item.name,item.price,item.image||'',item.emoji||'🥙');
+};
+
+// ── MENU PAGE ────────────────────────────────────────────────
+function renderMenuPage(filter='', catFilter='') {
+  const cats=[...new Set(Object.values(allItems).filter(i=>i.active!==false&&i.category).map(i=>i.category))];
+  const catsEl=$('menuCats');
+  if(catsEl && !catFilter) {
+    catsEl.innerHTML=['All',...cats].map((c,i)=>`<button class="mcat-btn ${i===0?'on':''}" onclick="filterMenuCat('${c}')">${c}</button>`).join('');
+  }
+  const shown=Object.entries(allItems).filter(([,i])=>{
+    if(i.active===false) return false;
+    if(catFilter&&catFilter!=='All'&&i.category!==catFilter) return false;
+    if(filter&&!i.name.toLowerCase().includes(filter)&&!(i.description||'').toLowerCase().includes(filter)) return false;
+    return true;
+  });
+  const list=$('menuList');
+  if(!list) return;
+  list.innerHTML=shown.length?shown.map(([id,i])=>{
+    const badgeCls={bestseller:'mb-best',spicy:'mb-spicy',premium:'mb-prem',deal:'mb-deal'};
+    const badgeTxt={bestseller:'⭐ Best',spicy:'🌶 Spicy',premium:'👑 Premium',deal:'🎯 Deal'};
+    const badge=i.badge&&badgeCls[i.badge]?`<span class="mi-badge ${badgeCls[i.badge]}">${badgeTxt[i.badge]}</span>`:'';
+    const n=(i.name||'').replace(/'/g,"\\'");
+    return `<div class="menu-item">
+      <div class="mi-img">
+        ${i.image?`<img src="${i.image}" alt="${i.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="mi-img-ph" style="display:none">${i.emoji||'🥙'}</div>`
+                 :`<div class="mi-img-ph">${i.emoji||'🥙'}</div>`}
+      </div>
+      <div class="mi-info">
+        ${badge}
+        <div class="mi-name">${i.name}</div>
+        <div class="mi-desc">${i.description||''}</div>
+        <div class="mi-foot">
+          <div class="mi-price">Rs.${Number(i.price).toLocaleString()}</div>
+          <button class="mi-add" ${i.soldOut?'disabled':''}
+            onclick="addToCart('${id}','${n}',${i.price},'${i.image||''}','${i.emoji||'🥙'}')">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('')
+  :'<div style="padding:2rem;text-align:center;color:var(--muted);">No items found 🔍</div>';
+
+  // Also update search page
+  $('searchList').innerHTML = list.innerHTML;
+}
+
+window.filterMenuCat = cat => {
+  currentCat=cat;
+  document.querySelectorAll('.mcat-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.mcat-btn').forEach(b=>{if(b.textContent===cat)b.classList.add('on');});
+  renderMenuPage($('menuSearch')?.value||'',cat==='All'?'':cat);
+};
+window.filterMenuSearch = val => {
+  renderMenuPage(val.toLowerCase(), currentCat==='All'?'':currentCat);
+};
+
+// ── CART ─────────────────────────────────────────────────────
+window.addToCart = (id,name,price,image,emoji) => {
+  const ex=cart.find(i=>i.id===id);
+  if(ex) ex.qty++; else cart.push({id,name,price:Number(price),image,emoji,qty:1});
+  updateCartBadge(); showToast(name+' added! 🔥');
+  renderCartPage();
+};
+window.changeCartQty = (id,d) => {
+  const item=cart.find(i=>i.id===id); if(!item) return;
+  item.qty+=d; if(item.qty<=0) cart=cart.filter(i=>i.id!==id);
+  updateCartBadge(); renderCartPage();
+};
+window.removeCartItem = id => { cart=cart.filter(i=>i.id!==id); updateCartBadge(); renderCartPage(); };
+
+function updateCartBadge(){
+  const t=cart.reduce((s,i)=>s+i.qty,0);
+  $('headerBadge').textContent=t;
+  $('headerBadge').classList.toggle('on',t>0);
+  document.querySelectorAll('.nav-item')[2].querySelector('.nav-ico').textContent=t>0?`🛒`:' 🛒';
+}
+function renderCartPage(){
+  const c=$('cartPageContent'); if(!c) return;
+  if(!cart.length){
+    c.innerHTML='<div class="cart-empty-state"><div class="ces-icon">🥙</div><div class="ces-title">Cart is Empty</div><div class="ces-sub">Add some Dandoosh to get started!</div><button onclick="navTo(\'menu\')" style="margin-top:1rem;background:var(--red);color:#fff;border:none;padding:.75rem 2rem;font-family:Outfit,sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:pointer;">Browse Menu</button></div>';
+    return;
+  }
+  const sub=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  c.innerHTML=`<div class="cart-list">${cart.map(i=>`
+    <div class="cart-row">
+      <div class="cr-img">${i.image?`<img src="${i.image}" onerror="this.style.display='none'" loading="eager">`:''}${i.emoji||'🥙'}</div>
+      <div class="cr-info">
+        <div class="cr-name">${i.name}</div>
+        <div class="cr-price">Rs.${i.price.toLocaleString()}</div>
+        <div class="cr-ctrl">
+          <button class="cr-btn" onclick="changeCartQty('${i.id}',-1)">−</button>
+          <span class="cr-qty">${i.qty}</span>
+          <button class="cr-btn" onclick="changeCartQty('${i.id}',1)">+</button>
+          <button class="cr-rm" onclick="removeCartItem('${i.id}')">✕</button>
+        </div>
+      </div>
+    </div>`).join('')}</div>
+  <div class="cart-summary">
+    <div class="cs-row"><span>Subtotal (${cart.reduce((s,i)=>s+i.qty,0)} items)</span><span>Rs.${sub.toLocaleString()}</span></div>
+    <div class="cs-row"><span>Delivery</span><span style="color:var(--green)">Free in Lahore</span></div>
+    <div class="cs-row total"><span>Total</span><span>Rs.${sub.toLocaleString()}</span></div>
+  </div>
+  <button class="checkout-btn-full" onclick="openCheckoutSheet()">Checkout 🔥</button>
+  <div style="height:1rem;"></div>`;
+}
+
+// ── CHECKOUT SHEET ────────────────────────────────────────────
+window.openCheckoutSheet = () => {
+  const sub=cart.reduce((t,i)=>t+i.price*i.qty,0);
+  $('sheetOrderSummary').innerHTML=cart.map(i=>
+    `<div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.25rem 0;border-bottom:1px solid var(--border)"><span>${i.name} ×${i.qty}</span><span style="color:var(--gold)">Rs.${(i.price*i.qty).toLocaleString()}</span></div>`
+  ).join('')+`<div style="display:flex;justify-content:space-between;font-size:.88rem;font-weight:700;padding:.5rem 0 0;color:var(--gold)"><span>Total</span><span>Rs.${sub.toLocaleString()}</span></div>`;
+  $('checkoutSheet').classList.add('show');
+};
+window.closeCheckoutSheet = () => $('checkoutSheet').classList.remove('show');
+window.setOrderType = (type, btn) => {
+  orderType=type;
+  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  $('sheetAddrWrap').style.display=type==='delivery'?'block':'none';
+};
+
+window.placeOrderApp = async () => {
+  const name=$('sheetName').value.trim(), phone=$('sheetPhone').value.trim();
+  if(!name||!phone){showToast('Please enter name and phone 🙏');return;}
+  const sub=cart.reduce((t,i)=>t+i.price*i.qty,0);
+  const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  const order={id,customerName:name,customerPhone:phone,
+    address:$('sheetAddr').value.trim()||'Pickup/Dine-in',orderType,
+    note:$('sheetNote').value.trim(),
+    items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price})),
+    total:sub,status:'new',timestamp:Date.now(),source:'pwa'};
+  await update(ref(db,'orders/'+id),order);
+  await push(ref(db,'newOrders'),{orderId:id,customerName:name,total:sub,ts:Date.now()});
+  // WhatsApp
+  let msg=`🔥 *New Order — Dandoosh دندوش* (App)\n\n👤 ${name}\n📞 ${phone}\n`;
+  if(order.address) msg+=`📍 ${order.address}\n`;
+  msg+=`🛒 ${orderType}\n\n*Items:*\n`;
+  cart.forEach(i=>{msg+=`• ${i.name} ×${i.qty} — Rs.${(i.price*i.qty).toLocaleString()}\n`;});
+  msg+=`\n💰 *Total: Rs.${sub.toLocaleString()}*`;
+  window.open(`https://wa.me/${CFG.whatsapp}?text=${encodeURIComponent(msg)}`,'_blank');
+  // ── LOYALTY: Save under uid if logged in, else phone as fallback ──
+  const pts = Math.floor(sub / (CFG.loyaltyDivisor || 100));
+  if (currentUser && pts > 0) {
+    const uid = currentUser.uid;
+    get(ref(db, 'users/' + uid + '/loyalty')).then(snap => {
+      const cur = snap.exists() ? snap.val() : { points:0, orders:0, redeemed:0 };
+      update(ref(db, 'users/' + uid + '/loyalty'), {
+        points:  (cur.points  || 0) + pts,
+        orders:  (cur.orders  || 0) + 1,
+        lastOrder: Date.now(),
+      });
+    });
+    // Also save order under user
+    update(ref(db, 'users/' + uid + '/orders/' + id), {
+      items: order.items, total: sub, status: 'new',
+      timestamp: Date.now(), orderType,
+    });
+  } else if (!currentUser) {
+    // Not logged in — save by phone as basic fallback (no account protection)
+    const cleanPh = phone.replace(/\D/g, '');
+    if (cleanPh && pts > 0) {
+      get(ref(db, 'loyalty/' + cleanPh)).then(snap => {
+        const cur = snap.exists() ? snap.val() : { points:0, orders:0 };
+        update(ref(db, 'loyalty/' + cleanPh), {
+          name, points:(cur.points||0)+pts, orders:(cur.orders||0)+1, lastOrder:Date.now()
+        });
+      });
+    }
+    showToast('Sign in with Google to save your points! 🔥');
+  }
+  cart=[]; updateCartBadge(); closeCheckoutSheet(); renderCartPage();
+  showToast('Order placed! Check WhatsApp 🔥');
+  navTo('home');
+  loadProfile();
+};
+
+// ── GOOGLE AUTH ──────────────────────────────────────────────
+window.signInGoogle = async () => {
+  const overlay = $('authOverlay');
+  const msg     = $('authMsg');
+  overlay.classList.add('show');
+  msg.textContent = 'Opening Google Sign-In...';
+  try {
+    // Use popup on desktop, redirect on mobile
+    if (window.innerWidth < 768 || /iPhone|Android/i.test(navigator.userAgent)) {
+      msg.textContent = 'Redirecting to Google...';
+      await signInWithRedirect(auth, provider);
+    } else {
+      const result = await signInWithPopup(auth, provider);
+      overlay.classList.remove('show');
+      handleUserSignedIn(result.user);
+    }
+  } catch(e) {
+    overlay.classList.remove('show');
+    if (e.code !== 'auth/popup-closed-by-user') {
+      showToast('Sign-in failed. Please try again.');
+    }
+  }
+};
+
+window.doSignOut = async () => {
+  if (!confirm('Sign out of Dandoosh?')) return;
+  await signOut(auth);
+  currentUser = null;
+  $('profileLoggedOut').style.display = 'block';
+  $('profileLoggedIn').style.display  = 'none';
+  showToast('Signed out');
+};
+
+function handleUserSignedIn(user) {
+  currentUser = user;
+  // Show logged in UI
+  $('profileLoggedOut').style.display = 'none';
+  $('profileLoggedIn').style.display  = 'block';
+  // Set avatar — use photo if available, else initials
+  const avatarEl = $('profileAvatar');
+  if (user.photoURL) {
+    avatarEl.innerHTML = `<img src="${user.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentElement.textContent='${user.displayName?.[0]||'👤'}'">`;
+    avatarEl.style.overflow = 'hidden';
+  } else {
+    avatarEl.textContent = user.displayName?.[0]?.toUpperCase() || '👤';
+  }
+  $('profileName').textContent  = user.displayName  || 'Dandoosh Fan';
+  $('profileEmail').textContent = user.email || '';
+
+  // Pre-fill checkout with display name
+  if ($('sheetName') && !$('sheetName').value) $('sheetName').value = user.displayName || '';
+
+  // Load loyalty points from Firebase (keyed by uid — secure)
+  const uid = user.uid;
+  onValue(ref(db, 'users/' + uid + '/loyalty'), snap => {
+    const data   = snap.exists() ? snap.val() : { points:0, orders:0, redeemed:0 };
+    const pts    = data.points  || 0;
+    const orders = data.orders  || 0;
+    $('loyPoints').textContent  = pts;
+    $('loyValue').textContent   = Math.floor(pts / (CFG.loyaltyRedeem || 10));
+    $('loyOrders').textContent  = orders;
+    $('loyBar').style.width     = Math.min(pts / 50, 1) * 100 + '%'; // 50 pts = full bar
+  });
+
+  // Load recent orders
+  get(ref(db, 'users/' + uid + '/orders')).then(snap => {
+    const list = $('recentOrders');
+    if (!snap.exists()) {
+      list.innerHTML = '<div style="padding:1rem;color:var(--muted);font-size:.82rem;">No orders yet — place your first order!</div>';
+      return;
+    }
+    const statusColor = { new:'var(--red)', accepted:'var(--gold)', preparing:'var(--gold)', out:'#3b82f6', delivered:'var(--green)', declined:'var(--muted)' };
+    const orders = Object.entries(snap.val())
+      .sort((a,b) => Number(b[1].timestamp) - Number(a[1].timestamp))
+      .slice(0, 8);
+    list.innerHTML = orders.map(([id,o]) => `
+      <div class="order-row">
+        <div class="or-top">
+          <div class="or-id">#${id.slice(-6).toUpperCase()}</div>
+          <span class="or-status" style="background:rgba(0,0,0,.3);color:${statusColor[o.status]||'var(--muted)'};">${o.status||'placed'}</span>
+        </div>
+        <div class="or-items">${(o.items||[]).slice(0,3).map(i=>i.name).join(' · ')}</div>
+        <div class="or-total">Rs. ${Number(o.total||0).toLocaleString()}</div>
+      </div>`).join('');
+  });
+
+  // Save display name + email to db for admin visibility
+  update(ref(db, 'users/' + uid + '/profile'), {
+    name:        user.displayName || '',
+    email:       user.email       || '',
+    photo:       user.photoURL    || '',
+    lastSeen:    Date.now(),
+  });
+}
+
+// ── AUTH STATE LISTENER ────────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  // Handle redirect result first
+  getRedirectResult(auth).then(result => {
+    if (result?.user) handleUserSignedIn(result.user);
+    $('authOverlay').classList.remove('show');
+  }).catch(() => { $('authOverlay').classList.remove('show'); });
+
+  if (user) {
+    handleUserSignedIn(user);
+  } else {
+    currentUser = null;
+    $('profileLoggedOut').style.display = 'block';
+    $('profileLoggedIn').style.display  = 'none';
+  }
+});
+
+// ── PROFILE ──────────────────────────────────────────────────
+function loadProfile(){
+  // Auth state listener above handles everything
+  // This is kept for compatibility
+}
+
+window.orderOnWhatsApp = () => {
+  const msg = 'Hi! I want to order from Dandoosh 🔥\n\nPlease share the menu.';
+  window.open(`https://wa.me/${CFG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+};
+
+// ── TOAST ────────────────────────────────────────────────────
+function showToast(msg){
+  const t=$('appToast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+renderMenuPage();
+loadProfile();
+</script>
+</body>
+</html>
