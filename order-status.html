@@ -2,301 +2,210 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Order Status</title>
-<script src="config.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order Status — Dandoosh</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Outfit:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#C9A84C;--dark:#0D0A07;--surface:#1A1410;--surface-alt:#2A1F14;--text:#F5F0E8;--muted:#8A7968;--accent:#FF4500;--green:#22c55e;--red:#ef4444;}
+:root{--red:#D42B2B;--red-deep:#A01E1E;--red-glow:rgba(212,43,43,.3);--dark:#0A0404;--surface:#140808;--card:#1A0A0A;--text:#FFF5F0;--muted:#8A6060;--gold:#E8B84B;--border:rgba(212,43,43,.18);--green:#22c55e;--blue:#3b82f6;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
-.topbar{background:var(--surface);border-bottom:1px solid rgba(201,168,76,.12);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.tlogo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--gold);text-decoration:none;}
-.oid{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);border:1px solid rgba(201,168,76,.18);padding:.28rem .75rem;}
-.page{max-width:680px;margin:0 auto;padding:2rem 1.5rem 5rem;}
-
-/* STATUS CARD */
-.status-card{background:var(--surface);border:1px solid rgba(201,168,76,.14);padding:1.8rem;margin-bottom:1.3rem;}
-.sc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.8rem;}
-.sc-title{font-family:'Playfair Display',serif;font-size:1.4rem;}
-.badge{display:inline-flex;padding:.35rem .9rem;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;border:1px solid;}
-.b-new{background:rgba(239,68,68,.09);color:var(--red);border-color:rgba(239,68,68,.28);}
-.b-accepted{background:rgba(201,168,76,.09);color:var(--gold);border-color:rgba(201,168,76,.28);}
-.b-preparing{background:rgba(59,130,246,.09);color:#3b82f6;border-color:rgba(59,130,246,.28);}
-.b-out{background:rgba(168,85,247,.09);color:#a855f7;border-color:rgba(168,85,247,.28);}
-.b-delivered{background:rgba(34,197,94,.09);color:var(--green);border-color:rgba(34,197,94,.28);}
-.b-declined{background:rgba(239,68,68,.09);color:var(--red);border-color:rgba(239,68,68,.28);}
-
-/* STEPPER */
-.stepper{display:flex;align-items:flex-start;justify-content:space-between;position:relative;margin-bottom:1.8rem;}
-.stepper::before{content:'';position:absolute;top:19px;left:8%;right:8%;height:2px;background:rgba(201,168,76,.12);}
-.step{display:flex;flex-direction:column;align-items:center;gap:.45rem;flex:1;position:relative;z-index:1;}
-.step-dot{width:38px;height:38px;border-radius:50%;border:2px solid rgba(201,168,76,.18);background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .5s;}
-.step-dot.done{border-color:var(--gold);background:rgba(201,168,76,.12);}
-.step-dot.active{border-color:var(--gold);background:var(--gold);animation:pulse 2s infinite;}
-.step-dot.active .si{filter:brightness(0);}
-.step-lbl{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;max-width:65px;}
-.step-lbl.active{color:var(--gold);}
-.step-lbl.done{color:var(--text);}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.4);}50%{box-shadow:0 0 0 9px rgba(201,168,76,0);}}
-
-/* ORDER ITEMS */
-.order-sum{background:var(--dark);border:1px solid rgba(201,168,76,.08);padding:1.1rem;}
-.sum-h{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem;}
-.sum-row{display:flex;justify-content:space-between;padding:.38rem 0;border-bottom:1px solid rgba(201,168,76,.06);font-size:.82rem;}
-.sum-row:last-child{border:none;font-weight:700;color:var(--gold);padding-top:.7rem;}
-
-/* DECLINED */
-.declined-card{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);padding:2rem;text-align:center;margin-bottom:1.3rem;display:none;}
-.declined-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--red);margin-bottom:.4rem;}
-
-/* MAP */
-.map-wrap{background:var(--surface);border:1px solid rgba(201,168,76,.14);margin-bottom:1.3rem;overflow:hidden;display:none;}
-.map-hd{padding:.9rem 1.3rem;border-bottom:1px solid rgba(201,168,76,.09);display:flex;align-items:center;justify-content:space-between;}
-.map-title{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);}
-#map{height:260px;}
-.map-status{padding:.7rem 1.3rem;background:rgba(201,168,76,.04);display:flex;align-items:center;gap:.7rem;font-size:.8rem;}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;flex-shrink:0;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
-
-/* LOYALTY BANNER */
-.loy-banner{background:linear-gradient(135deg,rgba(201,168,76,.09),rgba(201,168,76,.04));border:1px solid rgba(201,168,76,.18);padding:1.1rem 1.3rem;margin-bottom:1.3rem;display:none;align-items:center;gap:.9rem;}
-.loy-ico{font-size:1.7rem;}
-.loy-earned{color:var(--gold);font-size:.92rem;font-weight:600;}
-.loy-total{font-size:.72rem;color:var(--muted);}
-
-/* CHAT */
-.chat-wrap{background:var(--surface);border:1px solid rgba(201,168,76,.14);}
-.chat-hd{padding:.9rem 1.3rem;border-bottom:1px solid rgba(201,168,76,.09);display:flex;align-items:center;gap:.65rem;}
-.chat-dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
-.chat-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;}
-.chat-msgs{height:280px;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.65rem;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(212,43,43,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(212,43,43,.02) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+.header{background:var(--red-deep);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(212,43,43,.4);position:sticky;top:0;z-index:100;}
+.header-logo{font-family:'Noto Naskh Arabic',serif;font-size:1.5rem;font-weight:700;color:#fff;text-decoration:none;direction:rtl;}
+.header-sub{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600;}
+.back-btn{background:rgba(255,255,255,.1);border:none;color:#fff;padding:.45rem .9rem;font-family:'Outfit',sans-serif;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:.4rem;}
+.back-btn:hover{background:rgba(255,255,255,.2);}
+.main{max-width:580px;margin:0 auto;padding:2rem 1.2rem;position:relative;z-index:1;}
+.poll-indicator{display:flex;align-items:center;gap:.5rem;font-size:.62rem;color:var(--muted);margin-bottom:1rem;}
+.poll-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pollPing 2s infinite;}
+@keyframes pollPing{0%,100%{opacity:1;}50%{opacity:.3;}}
+.oid-card{background:linear-gradient(135deg,var(--red-deep),var(--card));border:1px solid rgba(212,43,43,.3);padding:1.4rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.oid-card::before{content:'دندوش';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);font-family:'Noto Naskh Arabic',serif;font-size:5rem;font-weight:700;color:rgba(255,255,255,.04);direction:rtl;}
+.oid-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:.3rem;}
+.oid-value{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:#fff;}
+.status-pill{padding:.38rem 1rem;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;display:inline-flex;align-items:center;gap:.4rem;}
+.sp-new{background:rgba(212,43,43,.2);color:var(--red);border:1px solid rgba(212,43,43,.4);}
+.sp-accepted,.sp-preparing{background:rgba(232,184,75,.15);color:var(--gold);border:1px solid rgba(232,184,75,.3);}
+.sp-out{background:rgba(59,130,246,.15);color:var(--blue);border:1px solid rgba(59,130,246,.3);}
+.sp-delivered{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);}
+.sp-declined,.sp-cancelled{background:rgba(212,43,43,.1);color:var(--muted);border:1px solid rgba(212,43,43,.2);}
+.stepper{display:flex;align-items:flex-start;margin-bottom:1.5rem;padding:1.4rem;background:var(--card);border:1px solid var(--border);}
+.step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+.step:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:2px;background:var(--border);z-index:0;}
+.step:not(:last-child).done::after{background:var(--red);}
+.step:not(:last-child).active::after{background:linear-gradient(90deg,var(--red),var(--border));}
+.step-dot{width:32px;height:32px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.9rem;z-index:1;position:relative;transition:all .4s;}
+.step.done .step-dot{background:var(--red);border-color:var(--red);box-shadow:0 0 12px var(--red-glow);}
+.step.active .step-dot{background:var(--red);border-color:var(--gold);animation:stepPulse 1.5s ease-in-out infinite;}
+@keyframes stepPulse{0%,100%{box-shadow:0 0 16px var(--red-glow),0 0 0 4px rgba(232,184,75,.15);}50%{box-shadow:0 0 25px var(--red-glow),0 0 0 8px rgba(232,184,75,.08);}}
+.step-lbl{font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:.5rem;text-align:center;font-weight:600;}
+.step.done .step-lbl{color:var(--red);}
+.step.active .step-lbl{color:var(--gold);}
+.declined-card{background:rgba(212,43,43,.06);border:1px solid rgba(212,43,43,.25);padding:1.2rem;margin-bottom:1.5rem;display:none;}
+.declined-card.on{display:block;}
+.declined-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--red);margin-bottom:.4rem;}
+.declined-reason{font-size:.82rem;color:var(--muted);line-height:1.65;}
+.rider-sec{background:var(--card);border:1px solid rgba(59,130,246,.25);padding:1.2rem;margin-bottom:1.5rem;display:none;}
+.rider-sec.on{display:block;}
+.rider-dot{width:10px;height:10px;border-radius:50%;background:var(--green);animation:rPing 1.5s infinite;flex-shrink:0;}
+@keyframes rPing{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5);}50%{box-shadow:0 0 0 6px rgba(34,197,94,0);}}
+#riderMap{height:240px;background:var(--surface);border:1px solid var(--border);margin-top:.9rem;}
+.order-summary{background:var(--card);border:1px solid var(--border);padding:1.3rem;margin-bottom:1.5rem;}
+.os-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:1rem;padding-bottom:.7rem;border-bottom:1px solid var(--border);}
+.os-item{display:flex;justify-content:space-between;padding:.4rem 0;font-size:.82rem;border-bottom:1px solid rgba(212,43,43,.05);}
+.os-item:last-child{border:none;font-weight:700;padding-top:.7rem;color:var(--gold);}
+.os-item:last-child span:last-child{font-family:'Space Mono',monospace;}
+.os-meta{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--border);}
+.os-meta-item{background:var(--surface);padding:.7rem .8rem;}
+.os-meta-label{font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:.25rem;}
+.os-meta-value{font-size:.82rem;font-weight:600;}
+.loyalty-banner{background:linear-gradient(135deg,rgba(232,184,75,.1),rgba(232,184,75,.05));border:1px solid rgba(232,184,75,.25);padding:1rem 1.2rem;margin-bottom:1.5rem;display:none;align-items:center;gap:.9rem;}
+.loyalty-banner.on{display:flex;}
+.chat-sec{background:var(--card);border:1px solid var(--border);margin-bottom:1.5rem;overflow:hidden;}
+.chat-hd{padding:.9rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;}
+.chat-hd-dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
+.chat-hd-title{font-size:.78rem;font-weight:700;}
+.chat-msgs{padding:.9rem;height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:.6rem;}
 .chat-msgs::-webkit-scrollbar{width:3px;}
-.chat-msgs::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);}
-.msg-me{align-self:flex-end;background:var(--gold);color:var(--dark);padding:.58rem .88rem;font-size:.8rem;border-radius:8px 8px 2px 8px;max-width:72%;}
-.msg-rest{align-self:flex-start;background:var(--surface-alt);padding:.58rem .88rem;font-size:.8rem;border-radius:8px 8px 8px 2px;max-width:72%;}
-.msg-sys{align-self:center;font-size:.64rem;color:var(--muted);padding:.26rem .72rem;background:rgba(201,168,76,.04);border-radius:10px;}
-.msg-time{font-size:.57rem;opacity:.5;margin-top:.25rem;}
-.chat-inp-row{padding:.85rem;border-top:1px solid rgba(201,168,76,.09);display:flex;gap:.55rem;}
-.chat-inp{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.14);color:var(--text);padding:.62rem .88rem;font-family:'Outfit',sans-serif;font-size:.82rem;outline:none;transition:border-color .2s;}
-.chat-inp:focus{border-color:var(--gold);}
-.send-btn{background:var(--gold);border:none;color:var(--dark);width:40px;height:40px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-
-.btn-gold{background:var(--gold);color:var(--dark);padding:.85rem 2rem;font-family:'Outfit',sans-serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;text-decoration:none;display:inline-block;margin-top:1.3rem;border:none;cursor:pointer;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--red);}
+.msg-me{align-self:flex-end;background:var(--red);color:#fff;padding:.55rem .85rem;font-size:.78rem;border-radius:10px 10px 2px 10px;max-width:75%;}
+.msg-rest{align-self:flex-start;background:var(--surface);border:1px solid var(--border);padding:.55rem .85rem;font-size:.78rem;border-radius:10px 10px 10px 2px;max-width:75%;}
+.msg-sys{align-self:center;font-size:.65rem;color:var(--muted);padding:.25rem .7rem;background:rgba(212,43,43,.06);border-radius:10px;}
+.chat-input-row{padding:.7rem;border-top:1px solid var(--border);display:flex;gap:.5rem;}
+.chat-input{flex:1;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text);padding:.58rem .85rem;font-family:'Outfit',sans-serif;font-size:.8rem;outline:none;}
+.chat-input:focus{border-color:var(--red);}
+.chat-send{background:var(--red);border:none;color:#fff;width:38px;height:38px;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;}
+.action-btns{display:flex;gap:.7rem;flex-wrap:wrap;}
+.action-btn{flex:1;min-width:140px;padding:.85rem 1rem;background:transparent;border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:all .3s;}
+.action-btn:hover{border-color:var(--red);color:var(--red);}
+.action-btn.primary{background:var(--red);color:#fff;border-color:var(--red);}
+.action-btn.wa{background:#25D366;color:#fff;border-color:#25D366;}
+@media(max-width:480px){.os-meta{grid-template-columns:1fr;}.action-btns{flex-direction:column;}}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-<div class="topbar">
-  <a href="index.html" class="tlogo" id="tLogo">Your Brand</a>
-  <div class="oid" id="oidBadge">Order #——</div>
+<div class="header">
+  <div><a href="index.html" class="header-logo">دندوش</a><div class="header-sub">Order Tracking</div></div>
+  <a href="index.html" class="back-btn">← Menu</a>
 </div>
-
-<div class="page">
-  <!-- DECLINED -->
+<div class="main">
+  <div class="poll-indicator"><div class="poll-dot"></div><span>Live — updates every 5 seconds</span></div>
+  <div class="oid-card">
+    <div><div class="oid-label">Order ID</div><div class="oid-value" id="oidValue">—</div></div>
+    <div id="statusPill"><span class="status-pill sp-new">⏳ Pending</span></div>
+  </div>
   <div class="declined-card" id="declinedCard">
-    <div style="font-size:2.5rem;margin-bottom:.8rem;">❌</div>
-    <div class="declined-title">Order Declined</div>
-    <div style="font-size:.82rem;color:var(--muted);" id="declineReason">The restaurant couldn't accept your order.</div>
-    <a href="index.html" class="btn-gold">Order Again</a>
-  </div>
-
-  <!-- STATUS CARD -->
-  <div class="status-card" id="mainCard">
-    <div class="sc-hd">
-      <div class="sc-title">Your Order</div>
-      <div class="badge b-new" id="statusBadge">Pending</div>
-    </div>
-    <div class="stepper">
-      <div class="step"><div class="step-dot active" id="dot0"><span class="si">📋</span></div><div class="step-lbl active" id="lbl0">Placed</div></div>
-      <div class="step"><div class="step-dot" id="dot1"><span class="si">✅</span></div><div class="step-lbl" id="lbl1">Accepted</div></div>
-      <div class="step"><div class="step-dot" id="dot2"><span class="si">👨‍🍳</span></div><div class="step-lbl" id="lbl2">Preparing</div></div>
-      <div class="step"><div class="step-dot" id="dot3"><span class="si">🛵</span></div><div class="step-lbl" id="lbl3">On Way</div></div>
-      <div class="step"><div class="step-dot" id="dot4"><span class="si">🏠</span></div><div class="step-lbl" id="lbl4">Delivered</div></div>
-    </div>
-    <div class="order-sum"><div class="sum-h">Order Summary</div><div id="itemsList"></div></div>
-  </div>
-
-  <!-- MAP -->
-  <div class="map-wrap" id="mapWrap">
-    <div class="map-hd"><div class="map-title">🗺 Live Rider Location</div><div style="font-size:.78rem;" id="etaText">Calculating...</div></div>
-    <div id="map"></div>
-    <div class="map-status"><div class="live-dot"></div><span id="riderNameText">Rider is on the way</span></div>
-  </div>
-
-  <!-- LOYALTY -->
-  <div class="loy-banner" id="loyBanner">
-    <div class="loy-ico">⭐</div>
-    <div><div class="loy-earned" id="loyEarned">You earned 0 points!</div><div class="loy-total" id="loyTotal">Check your balance on next order</div></div>
-  </div>
-
-  <!-- CHAT -->
-  <div class="chat-wrap">
-    <div class="chat-hd"><div class="chat-dot"></div><div class="chat-title">Chat with Restaurant</div></div>
-    <div class="chat-msgs" id="chatMsgs"><div class="msg-sys">💬 Ask about your order</div></div>
-    <div class="chat-inp-row">
-      <input class="chat-inp" id="chatInp" placeholder="Type a message..." maxlength="300" onkeydown="if(event.key==='Enter')sendMsg()">
-      <button class="send-btn" onclick="sendMsg()">➤</button>
+    <div class="declined-title">❌ Order Declined</div>
+    <div class="declined-reason" id="declineReason">Your order was declined. Please contact us.</div>
+    <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap;">
+      <a href="#" class="action-btn wa" id="declineWaBtn">📲 WhatsApp Us</a>
+      <a href="index.html" class="action-btn">← New Order</a>
     </div>
   </div>
+  <div class="stepper">
+    <div class="step" id="dot0"><div class="step-dot">📥</div><div class="step-lbl" id="lbl0">Received</div></div>
+    <div class="step" id="dot1"><div class="step-dot">✅</div><div class="step-lbl" id="lbl1">Accepted</div></div>
+    <div class="step" id="dot2"><div class="step-dot">👨‍🍳</div><div class="step-lbl" id="lbl2">Preparing</div></div>
+    <div class="step" id="dot3"><div class="step-dot">🛵</div><div class="step-lbl" id="lbl3">On Way</div></div>
+    <div class="step" id="dot4"><div class="step-dot">🏁</div><div class="step-lbl" id="lbl4">Delivered</div></div>
+  </div>
+  <div class="rider-sec" id="riderSec">
+    <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem;">
+      <div class="rider-dot"></div>
+      <div><div style="font-weight:700;font-size:.88rem;" id="riderNameEl">Rider on the way 🛵</div><div style="font-size:.72rem;color:var(--muted);">Live GPS — updates every 5 seconds</div></div>
+    </div>
+    <div id="riderMap"></div>
+  </div>
+  <div class="loyalty-banner" id="loyaltyBanner">
+    <div style="font-size:1.8rem;">⭐</div>
+    <div><div style="font-size:.88rem;font-weight:700;color:var(--gold);" id="loyEarnedText">You earned loyalty points!</div><div style="font-size:.74rem;color:var(--muted);margin-top:.15rem;">Saved to your account. Use on next order.</div></div>
+  </div>
+  <div class="order-summary">
+    <div class="os-title">Order Summary 🔥</div>
+    <div id="itemsList"></div>
+    <div class="os-meta" id="orderMeta"></div>
+  </div>
+  <div class="chat-sec">
+    <div class="chat-hd"><div class="chat-hd-dot"></div><div class="chat-hd-title">Chat with Dandoosh 🔥</div></div>
+    <div class="chat-msgs" id="chatMsgs"><div class="msg-sys">Your order is being processed 🔥</div></div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInp" placeholder="Ask about your order..." onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="chat-send" onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+  <div class="action-btns">
+    <a href="#" class="action-btn wa" id="waContactBtn">📲 WhatsApp</a>
+    <a href="index.html" class="action-btn primary">🔥 Order Again</a>
+  </div>
+  <div style="height:2rem;"></div>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, onValue, push, get }
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-
-const CFG    = window.RESTAURANT_CONFIG;
-const app    = initializeApp(CFG.firebase);
-const db     = getDatabase(app);
-const params = new URLSearchParams(location.search);
-const orderId = params.get('id');
-if (!orderId) location.href = 'index.html';
-
-document.getElementById('tLogo').textContent    = CFG.name;
-document.getElementById('oidBadge').textContent = 'Order #' + orderId.slice(-6).toUpperCase();
-document.title = 'Order Status — Dandoosh دندوش';
-
-const statusStep = { new:0, accepted:1, preparing:2, out:3, delivered:4, declined:-1 };
-const badgeClass = { new:'b-new', accepted:'b-accepted', preparing:'b-preparing', out:'b-out', delivered:'b-delivered', declined:'b-declined' };
-const badgeText  = { new:'⏳ Pending', accepted:'✅ Accepted', preparing:'👨‍🍳 Preparing', out:'🛵 Out for Delivery', delivered:'🏁 Delivered', declined:'❌ Declined' };
-
-let map = null, riderMarker = null, customerMarker = null;
-let lastStatus = null;
-
-// ── LIVE ORDER UPDATES from Firebase (instant) ────────────────
-onValue(ref(db, 'orders/' + orderId), snap => {
-  if (!snap.exists()) return;
-  updateUI(snap.val());
-});
-
-// ── ALSO POLL every 5 seconds as fallback ────────────────────
-setInterval(async () => {
-  const snap = await get(ref(db, 'orders/' + orderId));
-  if (snap.exists()) updateUI(snap.val());
-}, 5000);
-
-function updateUI(order) {
-  const status = order.status || 'new';
-  const step   = statusStep[status] ?? 0;
-
-  // Only update DOM if status changed (avoid flicker)
-  if (status !== lastStatus) {
-    lastStatus = status;
-
-    // Badge
-    const badge = document.getElementById('statusBadge');
-    badge.className  = 'badge ' + (badgeClass[status] || 'b-new');
-    badge.textContent = badgeText[status] || status;
-
-    // Stepper
-    for (let i = 0; i <= 4; i++) {
-      document.getElementById('dot'+i).className = 'step-dot ' + (i < step ? 'done' : i === step ? 'active' : '');
-      document.getElementById('lbl'+i).className = 'step-lbl '  + (i < step ? 'done' : i === step ? 'active' : '');
+import { getDatabase, ref, onValue, push, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+const FB={apiKey:"AIzaSyAjttUsOACKZP6SEQWPFReQTH2OTA9-ih8",authDomain:"dandoosh-e0738.firebaseapp.com",databaseURL:"https://dandoosh-e0738-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"dandoosh-e0738",storageBucket:"dandoosh-e0738.firebasestorage.app",messagingSenderId:"972226913996",appId:"1:972226913996:web:38caf4dd8f5aa63e7c4469"};
+const WA='923090090123';
+const app=initializeApp(FB),db=getDatabase(app),$=id=>document.getElementById(id);
+const params=new URLSearchParams(location.search),orderId=params.get('id');
+if(!orderId)location.href='index.html';
+$('oidValue').textContent='#'+orderId.slice(-6).toUpperCase();
+$('waContactBtn').href=`https://wa.me/${WA}?text=Hi! My order %23${orderId.slice(-6).toUpperCase()}. Need help.`;
+$('declineWaBtn').href=`https://wa.me/${WA}?text=My order %23${orderId.slice(-6).toUpperCase()} was declined.`;
+const statusStep={new:0,accepted:1,preparing:2,out:3,delivered:4,declined:-1,cancelled:-1};
+const pillCls={new:'sp-new',accepted:'sp-accepted',preparing:'sp-preparing',out:'sp-out',delivered:'sp-delivered',declined:'sp-declined',cancelled:'sp-cancelled'};
+const pillTxt={new:'⏳ Pending',accepted:'✅ Accepted',preparing:'👨‍🍳 Preparing',out:'🛵 On the Way',delivered:'🏁 Delivered',declined:'❌ Declined',cancelled:'⚠️ Cancelled'};
+const stepIco=['📥','✅','👨‍🍳','🛵','🏁'];
+let lastStatus=null,map=null,riderMarker=null;
+onValue(ref(db,'orders/'+orderId),snap=>{if(snap.exists())updateUI(snap.val());});
+setInterval(async()=>{const s=await get(ref(db,'orders/'+orderId));if(s.exists())updateUI(s.val());},5000);
+function updateUI(o){
+  const status=o.status||'new',step=statusStep[status]??0;
+  if(status!==lastStatus){
+    lastStatus=status;
+    $('statusPill').innerHTML=`<span class="status-pill ${pillCls[status]||'sp-new'}">${pillTxt[status]||status}</span>`;
+    for(let i=0;i<=4;i++){
+      const d=$('dot'+i),l=$('lbl'+i);
+      d.className='step '+(i<step?'done':i===step?'active':'');
+      d.querySelector('.step-dot').textContent=i<step?'✓':stepIco[i];
     }
-
-    // Declined state
-    if (status === 'declined') {
-      document.getElementById('declinedCard').style.display = 'block';
-      document.getElementById('mainCard').style.opacity = '0.4';
-      if (order.declineReason) document.getElementById('declineReason').textContent = order.declineReason;
-    }
-
-    // Loyalty banner on delivery
-    if (status === 'delivered' && order.loyaltyEarned) {
-      document.getElementById('loyBanner').style.display = 'flex';
-      document.getElementById('loyEarned').textContent = 'You earned ' + order.loyaltyEarned + ' points!';
-    }
+    if(status==='declined'||status==='cancelled'){$('declinedCard').classList.add('on');if(o.declineReason)$('declineReason').textContent=o.declineReason;}
+    if(status==='out'){$('riderSec').classList.add('on');if(o.riderName)$('riderNameEl').textContent=o.riderName+' is on the way 🛵';initMap(o);}
+    if(status==='delivered'){const pts=Math.floor(Number(o.total||0)/100);if(pts>0){$('loyaltyBanner').classList.add('on');$('loyEarnedText').textContent=`You earned ${pts} loyalty points! 🔥`;}}
   }
-
-  // Items (always update in case it changes)
-  const items = order.items || [];
-  const total = Number(order.total || 0);
-  document.getElementById('itemsList').innerHTML =
-    items.map(i => `<div class="sum-row"><span>${i.name} ×${i.qty}</span><span>Rs.${(i.price*i.qty).toLocaleString()}</span></div>`).join('') +
-    `<div class="sum-row"><span>Total</span><span>Rs.${total.toLocaleString()}</span></div>`;
-
-  // Show map when out for delivery
-  const mapWrap = document.getElementById('mapWrap');
-  if (status === 'out') {
-    mapWrap.style.display = 'block';
-    if (order.riderName) document.getElementById('riderNameText').textContent = order.riderName + ' is on the way';
-    // Init map if not done
-    if (!map) initMap(order);
-  } else {
-    mapWrap.style.display = 'none';
+  const items=o.items||[],total=Number(o.total||0);
+  $('itemsList').innerHTML=items.map(i=>`<div class="os-item"><span>${i.name} <span style="color:var(--muted)">×${i.qty}</span></span><span>Rs.${(i.price*i.qty).toLocaleString()}</span></div>`).join('')+`<div class="os-item"><span>Total</span><span>Rs.${total.toLocaleString()}</span></div>`;
+  $('orderMeta').innerHTML=`<div class="os-meta-item"><div class="os-meta-label">Type</div><div class="os-meta-value">${{delivery:'🛵 Delivery',pickup:'🏃 Pickup',dine:'🪑 Dine In'}[o.orderType]||o.orderType||'—'}</div></div><div class="os-meta-item"><div class="os-meta-label">Address</div><div class="os-meta-value" style="font-size:.75rem;">${o.address||'—'}</div></div><div class="os-meta-item"><div class="os-meta-label">Customer</div><div class="os-meta-value">${o.customerName||'—'}</div></div><div class="os-meta-item"><div class="os-meta-label">Phone</div><div class="os-meta-value">${o.customerPhone||'—'}</div></div>`;
+}
+function initMap(o){
+  const lat=o.liveLocation?.lat||31.5204,lng=o.liveLocation?.lng||74.3587;
+  if(!map){
+    map=L.map('riderMap').setView([lat,lng],14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:''}).addTo(map);
+    const ri=L.divIcon({html:'<div style="font-size:1.6rem">🛵</div>',className:'',iconSize:[32,32]});
+    riderMarker=L.marker([lat,lng],{icon:ri}).addTo(map);
+    if(o.liveLocation?.lat){const ci=L.divIcon({html:'<div style="font-size:1.6rem">📍</div>',className:'',iconSize:[32,32]});L.marker([o.liveLocation.lat,o.liveLocation.lng],{icon:ci}).addTo(map);}
   }
 }
-
-// ── INIT MAP ─────────────────────────────────────────────────
-function initMap(order) {
-  const defaultLat = 31.5204, defaultLng = 74.3587;
-  map = L.map('map').setView([defaultLat, defaultLng], 14);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-  // Rider marker
-  const riderIcon = L.divIcon({ html: '<div style="font-size:1.7rem">🛵</div>', className: '', iconSize:[32,32] });
-  riderMarker = L.marker([defaultLat, defaultLng], { icon: riderIcon }).addTo(map);
-
-  // Customer marker (from order live location)
-  if (order.liveLocation?.lat && order.liveLocation?.lng) {
-    const custIcon = L.divIcon({ html: '<div style="font-size:1.7rem">📍</div>', className: '', iconSize:[32,32] });
-    customerMarker = L.marker([order.liveLocation.lat, order.liveLocation.lng], { icon: custIcon })
-      .addTo(map).bindPopup('Your location');
-  }
-}
-
-// ── LIVE RIDER GPS (Firebase real-time) ──────────────────────
-onValue(ref(db, 'riderLocation/' + orderId), snap => {
-  if (!snap.exists()) return;
-  const { lat, lng, eta } = snap.val();
-
-  if (!map) {
-    // Map not initialized yet, init it
-    const dummyOrder = { liveLocation: null };
-    initMap(dummyOrder);
-    document.getElementById('mapWrap').style.display = 'block';
-  }
-
-  // Update rider marker position
-  if (riderMarker) {
-    riderMarker.setLatLng([lat, lng]);
-    map.setView([lat, lng], 15);
-  }
-  if (eta) document.getElementById('etaText').textContent = eta;
+onValue(ref(db,'riderLocation/'+orderId),snap=>{
+  if(!snap.exists())return;
+  const{lat,lng}=snap.val();
+  if(!map){$('riderSec').classList.add('on');initMap({liveLocation:{lat,lng}});}
+  if(riderMarker){riderMarker.setLatLng([lat,lng]);map.panTo([lat,lng]);}
 });
-
-// ── CHAT ─────────────────────────────────────────────────────
-onValue(ref(db, 'chats/' + orderId), snap => {
-  const container = document.getElementById('chatMsgs');
-  container.innerHTML = '';
-  if (!snap.exists()) {
-    container.innerHTML = '<div class="msg-sys">💬 Ask about your order</div>';
-    return;
-  }
-  Object.values(snap.val()).sort((a,b) => a.ts - b.ts).forEach(m => {
-    const d = document.createElement('div');
-    if (m.role === 'system') d.className = 'msg-sys';
-    else if (m.role === 'customer') {
-      d.className = 'msg-me';
-      d.innerHTML = m.text + `<div class="msg-time">${new Date(m.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;
-    } else {
-      d.className = 'msg-rest';
-      d.innerHTML = m.text + `<div class="msg-time">${new Date(m.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;
-    }
-    container.appendChild(d);
+onValue(ref(db,'chats/'+orderId),snap=>{
+  const c=$('chatMsgs');c.innerHTML='';
+  if(!snap.exists()){c.innerHTML='<div class="msg-sys">Your order is being processed 🔥</div>';return;}
+  Object.values(snap.val()).sort((a,b)=>a.ts-b.ts).forEach(m=>{
+    const d=document.createElement('div');
+    if(m.role==='system')d.className='msg-sys';
+    else if(m.role==='customer'){d.className='msg-me';d.textContent=m.text;}
+    else{d.className='msg-rest';d.innerHTML=`<strong style="font-size:.65rem;color:var(--red);display:block;margin-bottom:.2rem;">Dandoosh 🔥</strong>${m.text}`;}
+    c.appendChild(d);
   });
-  container.scrollTop = container.scrollHeight;
+  c.scrollTop=c.scrollHeight;
 });
-
-window.sendMsg = function() {
-  const inp = document.getElementById('chatInp');
-  const txt = inp.value.trim();
-  if (!txt) return;
-  push(ref(db, 'chats/' + orderId), { text: txt, role: 'customer', ts: Date.now() });
-  inp.value = '';
-};
+window.sendMsg=()=>{const inp=$('chatInp'),txt=inp.value.trim();if(!txt)return;push(ref(db,'chats/'+orderId),{text:txt,role:'customer',ts:Date.now()});inp.value='';};
 </script>
 </body>
 </html>
