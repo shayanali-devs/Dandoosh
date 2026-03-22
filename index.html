@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dandoosh — Where Arabic Meets Desi</title>
 <script src="dandoosh-config.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --red:#D42B2B;--red-deep:#A01E1E;--red-glow:rgba(212,43,43,.35);
@@ -43,7 +43,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 nav.stuck{background:rgba(10,4,4,.96);backdrop-filter:blur(24px);border-color:var(--border);padding:1rem 5rem;}
 nav.stuck::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent);}
 .nav-logo{text-decoration:none;display:flex;align-items:center;gap:.8rem;}
-.logo-arabic{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--red);line-height:1;transition:all .3s;}
+.logo-arabic{font-family:'Noto Naskh Arabic','Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--red);line-height:1;transition:all .3s;direction:rtl;}
 .logo-eng{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);display:block;margin-top:.1rem;font-weight:600;}
 .nav-logo:hover .logo-arabic{color:var(--gold);text-shadow:0 0 25px var(--red-glow);}
 .nav-links{display:flex;gap:2.5rem;list-style:none;}
@@ -96,7 +96,7 @@ nav.stuck::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px
 .sarr{width:44px;height:44px;background:rgba(212,43,43,.1);border:1px solid var(--border);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .3s;}
 .sarr:hover{background:var(--red);border-color:var(--red);box-shadow:0 0 18px var(--red-glow);}
 /* Arabic text watermark */
-.hero-watermark{position:absolute;right:-2%;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:clamp(8rem,18vw,22rem);font-weight:900;color:rgba(212,43,43,.04);pointer-events:none;z-index:1;white-space:nowrap;line-height:1;user-select:none;}
+.hero-watermark{position:absolute;right:-2%;top:50%;transform:translateY(-50%);font-family:'Noto Naskh Arabic','Playfair Display',serif;direction:rtl;font-size:clamp(8rem,18vw,22rem);font-weight:900;color:rgba(212,43,43,.04);pointer-events:none;z-index:1;white-space:nowrap;line-height:1;user-select:none;}
 
 /* ── MARQUEE ── */
 .mq{overflow:hidden;padding:.65rem 0;background:var(--red-deep);border-bottom:1px solid rgba(212,43,43,.3);position:relative;}
@@ -191,6 +191,19 @@ h2.sec-title .gold{color:var(--gold);}
 .spec-card{background:var(--card);border:1px solid rgba(232,184,75,.2);position:relative;overflow:hidden;transition:all .4s;cursor:pointer;}
 .spec-card:hover{transform:translateY(-7px);box-shadow:0 20px 55px rgba(212,43,43,.2);border-color:var(--gold);}
 .spec-ribbon{position:absolute;top:14px;right:-8px;background:var(--red);color:#fff;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;padding:.28rem .9rem .28rem .65rem;font-weight:800;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,8% 50%);z-index:3;}
+/* Chef badge */
+.chef-badge{position:absolute;top:10px;left:10px;background:linear-gradient(135deg,var(--gold),#b8860b);color:var(--dark);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .65rem;font-weight:800;z-index:3;display:flex;align-items:center;gap:.3rem;animation:badgePulse2 2s ease-in-out infinite;}
+@keyframes badgePulse2{0%,100%{box-shadow:0 0 0 0 rgba(232,184,75,.4);}50%{box-shadow:0 0 0 6px rgba(232,184,75,0);}}
+/* Countdown timer */
+.spec-timer{background:rgba(10,4,4,.75);border-top:1px solid rgba(212,43,43,.25);padding:.55rem 1rem;display:flex;align-items:center;gap:.6rem;font-size:.72rem;}
+.spec-timer-label{color:var(--muted);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+.spec-timer-val{font-family:'Space Mono',monospace;font-weight:700;color:var(--gold);}
+.spec-timer-sep{color:var(--muted);}
+/* Sold out overlay anim */
+.spec-sold-overlay{position:absolute;inset:0;background:rgba(10,4,4,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;gap:.5rem;}
+.spec-sold-icon{font-size:2.5rem;animation:lockShake .5s ease-in-out;}
+@keyframes lockShake{0%,100%{transform:rotate(0);}25%{transform:rotate(-8deg);}75%{transform:rotate(8deg);}}
+.spec-sold-text{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--muted);}
 .spec-img{height:220px;background:linear-gradient(135deg,var(--surface-alt),var(--surface));display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;overflow:hidden;}
 .spec-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:transform .5s;}
 .spec-card:hover .spec-img img{transform:scale(1.06);}
@@ -249,7 +262,7 @@ h2.sec-title .gold{color:var(--gold);}
 footer{background:#070202;border-top:1px solid var(--border);padding:5rem 5rem 2.5rem;position:relative;z-index:1;}
 footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent);}
 .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;padding-bottom:3rem;border-bottom:1px solid var(--border);}
-.footer-logo-arabic{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--red);margin-bottom:.3rem;}
+.footer-logo-arabic{font-family:'Noto Naskh Arabic','Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--red);margin-bottom:.3rem;direction:rtl;}
 .footer-logo-eng{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:1rem;}
 .footer-desc{font-size:.8rem;color:var(--muted);line-height:1.85;margin-bottom:1.8rem;max-width:280px;}
 .footer-socials{display:flex;gap:.6rem;}
@@ -340,6 +353,13 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 .survey-done{text-align:center;padding:2rem 0;}
 .survey-done .ico{font-size:3.5rem;margin-bottom:1rem;}
 
+/* ── WHATSAPP FLOAT ── */
+.wa-float{position:fixed;bottom:2rem;left:2rem;z-index:900;background:#25D366;color:#fff;border:none;width:56px;height:56px;border-radius:50%;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 25px rgba(37,211,102,.4);transition:all .3s;text-decoration:none;animation:waPulse 3s ease-in-out infinite;}
+.wa-float:hover{background:#128C7E;transform:scale(1.1);animation:none;}
+@keyframes waPulse{0%,100%{box-shadow:0 6px 25px rgba(37,211,102,.4);}50%{box-shadow:0 6px 25px rgba(37,211,102,.4),0 0 0 12px rgba(37,211,102,.1),0 0 0 22px rgba(37,211,102,.04);}}
+.wa-float-tooltip{position:absolute;left:calc(100% + .6rem);background:rgba(10,4,4,.9);color:#fff;font-size:.68rem;white-space:nowrap;padding:.35rem .7rem;pointer-events:none;opacity:0;transition:opacity .2s;font-family:'Outfit',sans-serif;font-weight:600;border:1px solid rgba(37,211,102,.3);}
+.wa-float:hover .wa-float-tooltip{opacity:1;}
+
 /* ── FLOAT CART ── */
 .float-cart{position:fixed;bottom:2rem;right:2rem;z-index:900;background:var(--red);color:#fff;border:none;width:58px;height:58px;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 28px var(--red-glow);transition:all .3s;opacity:0;transform:scale(0);clip-path:polygon(0 0,80% 0,100% 20%,100% 100%,20% 100%,0 80%);}
 .float-cart.on{opacity:1;transform:scale(1);animation:fcPulse 3s ease-in-out infinite;}
@@ -350,6 +370,28 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 .btt.on{opacity:1;transform:translateY(0);}
 .btt:hover{transform:translateY(-3px) scale(1.1);}
 
+/* ── ITEM DETAIL SHEET ── */
+.item-sheet-bg{position:fixed;inset:0;background:rgba(10,4,4,.88);z-index:3500;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(8px);}
+.item-sheet-bg.on{opacity:1;pointer-events:all;}
+.item-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);border-radius:18px 18px 0 0;z-index:3501;transform:translateY(100%);transition:transform .45s cubic-bezier(.25,.46,.45,.94);max-height:88vh;overflow-y:auto;max-width:680px;margin:0 auto;}
+.item-sheet.on{transform:translateY(0);}
+.item-sheet-drag{width:40px;height:4px;background:rgba(255,245,240,.15);border-radius:2px;margin:1rem auto .5rem;}
+.item-sheet-img{width:100%;height:280px;object-fit:cover;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;}
+.item-sheet-img img{width:100%;height:100%;object-fit:cover;}
+.item-sheet-body{padding:1.5rem;}
+.item-sheet-cat{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:.4rem;}
+.item-sheet-name{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-bottom:.7rem;line-height:1.1;}
+.item-sheet-desc{font-size:.88rem;color:var(--muted);line-height:1.8;margin-bottom:1.5rem;}
+.item-sheet-footer{display:flex;align-items:center;justify-content:space-between;padding-top:1.2rem;border-top:1px solid var(--border);}
+.item-sheet-price{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);}
+.item-sheet-add{background:var(--red);color:#fff;border:none;padding:1rem 2rem;font-family:'Outfit',sans-serif;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:pointer;clip-path:polygon(0 0,92% 0,100% 25%,100% 100%,8% 100%,0 75%);transition:all .3s;display:flex;align-items:center;gap:.5rem;}
+.item-sheet-add:hover{background:var(--red-deep);box-shadow:0 0 25px var(--red-glow);}
+.item-sheet-badges{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.item-sheet-nutr{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:1rem;margin-bottom:1.5rem;}
+.isn{background:var(--card);border:1px solid var(--border);padding:.7rem;text-align:center;}
+.isn-v{font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;color:var(--text);}
+.isn-l{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.15rem;}
+
 /* ── TOAST ── */
 .toast{position:fixed;bottom:2.5rem;left:50%;transform:translateX(-50%) translateY(16px);background:var(--surface);border:1px solid var(--red);border-left:3px solid var(--gold);color:var(--text);padding:.9rem 1.8rem;font-size:.8rem;z-index:9000;opacity:0;transition:all .38s;pointer-events:none;white-space:nowrap;}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -359,6 +401,23 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 .sdot-item{width:7px;height:7px;border-radius:50%;background:rgba(255,245,240,.15);border:1px solid rgba(212,43,43,.2);cursor:pointer;transition:all .35s;}
 .sdot-item:hover{background:rgba(212,43,43,.4);transform:scale(1.3);}
 .sdot-item.on{background:var(--red);box-shadow:0 0 12px var(--red-glow);height:22px;border-radius:4px;border-color:var(--red);}
+
+/* ── SKELETON LOADER ── */
+.skel-card{background:var(--card);border:1px solid var(--border);overflow:hidden;}
+.skel-img{height:200px;background:linear-gradient(90deg,var(--surface) 25%,rgba(212,43,43,.07) 50%,var(--surface) 75%);background-size:200%;animation:skelShimmer 1.6s infinite;}
+.skel-body{padding:1.3rem;display:flex;flex-direction:column;gap:.6rem;}
+.skel-line{height:10px;border-radius:2px;background:linear-gradient(90deg,var(--surface) 25%,rgba(212,43,43,.07) 50%,var(--surface) 75%);background-size:200%;animation:skelShimmer 1.6s infinite;}
+.skel-line.w80{width:80%;}
+.skel-line.w60{width:60%;}
+.skel-line.w40{width:40%;}
+@keyframes skelShimmer{0%{background-position:-200%;}100%{background-position:200%;}}
+
+/* ── PARALLAX SECTIONS ── */
+.parallax-sec{position:relative;height:480px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.parallax-bg-div{position:absolute;inset:-25%;background-size:cover;background-position:center;will-change:transform;transition:background .5s;}
+.parallax-overlay-div{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,4,4,.88) 0%,rgba(10,4,4,.6) 100%);z-index:1;}
+.parallax-text{position:relative;z-index:2;text-align:center;max-width:680px;padding:0 2rem;}
+@media(max-width:768px){.parallax-sec{height:360px;}.parallax-text h2{font-size:clamp(1.8rem,7vw,3rem);}}
 
 /* ── REVEAL ── */
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .75s,transform .75s;}
@@ -463,7 +522,9 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 <section id="about">
   <div class="about-wrap">
     <div class="about-visual reveal-l">
-      <div class="about-big">🔥<div id="aboutImg"></div></div>
+      <div class="about-big" id="aboutBig">
+          <span style="font-size:6rem;z-index:0;position:relative;">🔥</span>
+        </div>
       <div class="about-small">
         <div class="about-small-v" id="aboutYr">2022</div>
         <div class="about-small-l">Est.</div>
@@ -539,6 +600,24 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
   </div>
 </div>
 
+<!-- ═══ PARALLAX 1 — Between flame & menu ═══ -->
+<div class="parallax-sec" id="parallaxSec1">
+  <div class="parallax-bg-div" id="parallaxBg1" style="background:linear-gradient(135deg,#2A0808,#0A0404);"></div>
+  <div class="parallax-overlay-div"></div>
+  <div class="parallax-text reveal">
+    <div class="eyebrow" style="justify-content:center;color:var(--gold);">🔥 Our Promise</div>
+    <h2 style="font-family:Playfair Display,serif;font-size:clamp(2rem,5vw,4.5rem);font-weight:900;color:#fff;line-height:1.05;letter-spacing:-.02em;">
+      Fresh. <em style="color:var(--red);font-style:italic;">Authentic.</em><br>Every Day.
+    </h2>
+    <p style="color:rgba(255,245,240,.65);font-size:.9rem;margin-top:1rem;line-height:1.75;max-width:500px;margin-left:auto;margin-right:auto;">
+      Every Dandoosh is made fresh when you order. No freezers, no shortcuts. That's our promise.
+    </p>
+    <div style="margin-top:1.8rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="#menu" class="btn-red">See Our Menu</a>
+    </div>
+  </div>
+</div>
+
 <!-- MENU -->
 <section id="menu">
   <div style="max-width:1260px;margin:0 auto;">
@@ -550,7 +629,10 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
       <div class="menu-tabs reveal" id="menuTabs"></div>
     </div>
     <div class="menu-grid" id="menuGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted);">Loading menu...</div>
+      <div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+<div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+<div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+<div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
     </div>
   </div>
 </section>
@@ -570,6 +652,25 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
     </div>
   </div>
 </section>
+
+<!-- ═══ PARALLAX 2 — Before gallery ═══ -->
+<div class="parallax-sec" id="parallaxSec2">
+  <div class="parallax-bg-div" id="parallaxBg2" style="background:linear-gradient(135deg,#1E0505,#0A0404);"></div>
+  <div class="parallax-overlay-div"></div>
+  <div class="parallax-text reveal">
+    <div class="eyebrow" style="justify-content:center;color:var(--gold);">📍 Find Us</div>
+    <h2 style="font-family:Playfair Display,serif;font-size:clamp(2rem,5vw,4.5rem);font-weight:900;color:#fff;line-height:1.05;letter-spacing:-.02em;">
+      Visit <em style="color:var(--red);font-style:italic;">Dandoosh.</em>
+    </h2>
+    <p style="color:rgba(255,245,240,.65);font-size:.9rem;margin-top:1rem;line-height:1.75;max-width:500px;margin-left:auto;margin-right:auto;">
+      Walk in, dine in, or order for delivery. We're in Lahore and we're ready for you.
+    </p>
+    <div style="margin-top:1.8rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="tel:03090090123" class="btn-red">📞 Call Now</a>
+      <a href="#order" class="btn-outline">Order Online →</a>
+    </div>
+  </div>
+</div>
 
 <!-- GALLERY -->
 <section id="gallery">
@@ -702,7 +803,33 @@ footer::before{content:'';display:block;position:absolute;top:0;left:0;right:0;h
 </div>
 
 <button class="float-cart" id="floatCart" onclick="openCart()">🛒<span class="fbadge" id="floatBadge">0</span></button>
+<a class="wa-float" id="waFloatBtn" href="#" target="_blank" title="Order on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <span class="wa-float-tooltip">Order on WhatsApp</span>
+</a>
 <div class="toast" id="toast"></div>
+
+<!-- ITEM DETAIL SHEET -->
+<div class="item-sheet-bg" id="itemSheetBg" onclick="closeItemSheet()"></div>
+<div class="item-sheet" id="itemSheet">
+  <div class="item-sheet-drag"></div>
+  <div class="item-sheet-img" id="sheetImgWrap"><span id="sheetEmoji" style="font-size:5rem;position:relative;z-index:1;">🥙</span></div>
+  <div class="item-sheet-body">
+    <div class="item-sheet-cat" id="sheetCat"></div>
+    <div class="item-sheet-name" id="sheetName"></div>
+    <div class="item-sheet-badges" id="sheetBadges"></div>
+    <div class="item-sheet-desc" id="sheetDesc"></div>
+    <div class="item-sheet-nutr">
+      <div class="isn"><div class="isn-v">100%</div><div class="isn-l">Halal</div></div>
+      <div class="isn"><div class="isn-v isn-price" id="sheetNutrPrice">—</div><div class="isn-l">Price (Rs.)</div></div>
+      <div class="isn"><div class="isn-v">Fresh</div><div class="isn-l">Daily</div></div>
+    </div>
+    <div class="item-sheet-footer">
+      <div class="item-sheet-price"><span style="font-size:.8rem;color:var(--muted);font-family:Outfit,sans-serif;font-weight:400;">Rs. </span><span id="sheetPrice">0</span></div>
+      <button class="item-sheet-add" id="sheetAddBtn">Add to Cart 🔥</button>
+    </div>
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -804,7 +931,11 @@ buildSlider(CFG.heroSlides);
 onValue(ref(db,'settings'), snap => {
   if (!snap.exists()) return;
   const s = snap.val();
+
+  // ── HERO SLIDES ─────────────────────────────────────────────
   if (s.heroSlides?.length) buildSlider(s.heroSlides);
+
+  // ── ACTIVE THEME ────────────────────────────────────────────
   if (s.activeTheme) {
     const t = CFG.themes?.[s.activeTheme];
     if (t && t.banner) {
@@ -814,11 +945,42 @@ onValue(ref(db,'settings'), snap => {
       $('themeBanner').classList.add('on');
     }
   }
+
+  // ── GALLERY IMAGES (6 slots) ─────────────────────────────────
+  const galleryLabels = ['Afghani Dandoosh','Fresh Off The Grill','The Royal Smoke','Mexici Collection','Sheesh Tau','Loaded Trays'];
+  const grid = $('galleryGrid');
   if (s.galleryImages?.length) {
-    const grid = $('galleryGrid');
-    const labels = ['Afghani Dandoosh','Fresh Off The Grill','The Royal Smoke','Mexici Collection','Sheesh Tau','Loaded Trays'];
-    grid.innerHTML = s.galleryImages.slice(0,6).map((url,i) => `
-      <div class="gal-item"><img src="${url}" alt="${labels[i]||'Dandoosh'}" loading="lazy"><div class="gal-cap">${labels[i]||''}</div></div>`).join('');
+    grid.innerHTML = s.galleryImages.slice(0,6).map((url, i) => `
+      <div class="gal-item">
+        <img src="${url}" alt="${galleryLabels[i]||'Dandoosh'}" loading="lazy" onerror="this.style.display='none'">
+        <div class="gal-cap">${galleryLabels[i]||''}</div>
+      </div>`).join('');
+  }
+
+  // ── ABOUT SECTION IMAGE ──────────────────────────────────────
+  if (s.aboutImage) {
+    const aboutBig = document.querySelector('.about-big');
+    if (aboutBig) {
+      let img = aboutBig.querySelector('img');
+      if (!img) { img = document.createElement('img'); img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;'; aboutBig.appendChild(img); }
+      img.src = s.aboutImage;
+    }
+  }
+
+  // ── PARALLAX SECTION IMAGES ──────────────────────────────────
+  if (s.parallax1) {
+    const p1 = $('parallaxBg1');
+    if (p1) { p1.style.backgroundImage=`url('${s.parallax1}')`; p1.style.backgroundSize='cover'; p1.style.backgroundPosition='center'; }
+  }
+  if (s.parallax2) {
+    const p2 = $('parallaxBg2');
+    if (p2) { p2.style.backgroundImage=`url('${s.parallax2}')`; p2.style.backgroundSize='cover'; p2.style.backgroundPosition='center'; }
+  }
+
+  // ── ORDER SECTION BACKGROUND ─────────────────────────────────
+  if (s.orderBg) {
+    const orderSec = document.querySelector('.order-sec');
+    if (orderSec) { orderSec.style.backgroundImage=`url('${s.orderBg}')`; orderSec.style.backgroundSize='cover'; orderSec.style.backgroundPosition='center'; }
   }
 });
 
@@ -890,7 +1052,7 @@ function menuCardHTML(id, item) {
   const sold = item.soldOut ? '<div class="sold-overlay">Sold Out</div>' : '';
   const img  = item.image ? `<img src="${item.image}" alt="${item.name}" loading="eager" onerror="this.style.display='none'">` : '';
   const n    = (item.name||'').replace(/'/g,"\\'");
-  return `<div class="mcard reveal">
+  return `<div class="mcard reveal" onclick="openItemSheet('${id}',${JSON.stringify(item).replace(/`/g,'\`')})" style="cursor:pointer;">
     <div class="mcard-img"><span class="mcard-emoji">${item.emoji||'🥙'}</span>${img}${badge}${sold}</div>
     <div class="mcard-body">
       <div class="mcard-cat">${item.category||''}</div>
@@ -1099,8 +1261,42 @@ window.addEventListener('scroll',()=>{
   $('nav').classList.toggle('stuck',y>60);
   $('scrollBar').style.width=(y/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%';
   $('bttBtn').classList.toggle('on',y>400);
-  // Parallax hero
-  const hero=$('heroEl'); if(hero){const bgs=hero.querySelectorAll('.slide-bg');bgs.forEach(bg=>{bg.style.transform=`translateY(${y*.2}px) scale(1.08)`;});}
+
+  // Hero parallax
+  const hero=$('heroEl');
+  if(hero){ hero.querySelectorAll('.slide-bg').forEach(bg=>{ bg.style.transform=`translateY(${y*.2}px) scale(1.08)`; }); }
+
+  // Parallax sections
+  ['parallaxSec1','parallaxSec2'].forEach(id=>{
+    const sec=$(id); if(!sec) return;
+    const bg=sec.querySelector('.parallax-bg-div'); if(!bg) return;
+    const rect=sec.getBoundingClientRect();
+    if(rect.top<window.innerHeight && rect.bottom>0){
+      const progress=(window.innerHeight-rect.top)/(window.innerHeight+rect.height);
+      bg.style.transform=`translateY(${(progress-.5)*130}px)`;
+    }
+  });
+
+  // About image parallax
+  const aboutBig=$('aboutBig');
+  if(aboutBig){
+    const rect=aboutBig.getBoundingClientRect();
+    if(rect.top<window.innerHeight&&rect.bottom>0){
+      const img=aboutBig.querySelector('img');
+      if(img){ const p=(window.innerHeight-rect.top)/(window.innerHeight+rect.height); img.style.transform=`translateY(${(p-.5)*40}px) scale(1.08)`; }
+    }
+  }
+
+  // Gallery items subtle parallax
+  document.querySelectorAll('.gal-item').forEach(item=>{
+    const rect=item.getBoundingClientRect();
+    if(rect.top<window.innerHeight&&rect.bottom>0){
+      const img=item.querySelector('img'); if(!img) return;
+      const p=(window.innerHeight-rect.top)/(window.innerHeight+rect.height);
+      img.style.transform=`translateY(${(p-.5)*30}px) scale(1.07)`;
+    }
+  });
+
   updateSdots();
 },{passive:true});
 
@@ -1184,6 +1380,104 @@ function toast(msg){
   clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000);
 }
 window.toast=toast;
+
+// ── WHATSAPP FLOAT SETUP ─────────────────────────────────────
+const waBtn = document.getElementById('waFloatBtn');
+if (waBtn) {
+  waBtn.href = 'https://wa.me/' + CFG.whatsapp + '?text=' + encodeURIComponent('Hi! I want to order from Dandoosh. Please share what is available today.');
+}
+
+// ── COUNTDOWN TIMER (resets at midnight) ─────────────────────
+function updateCountdown() {
+  const now   = new Date();
+  const midnight = new Date(now); midnight.setHours(24,0,0,0);
+  const diff  = midnight - now;
+  const h = String(Math.floor(diff / 3600000)).padStart(2,'0');
+  const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+  const s = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+  const val = `${h}:${m}:${s}`;
+  ['spec-timer1','spec-timer2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  });
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ── ITEM DETAIL SHEET ─────────────────────────────────────────
+window.openItemSheet = (id, item) => {
+  const wrap   = document.getElementById('sheetImgWrap');
+  const emoji  = document.getElementById('sheetEmoji');
+  const imgExisting = wrap.querySelector('img');
+  if (imgExisting) imgExisting.remove();
+
+  if (item.image) {
+    const img = document.createElement('img');
+    img.src = item.image;
+    img.alt = item.name;
+    img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;';
+    img.onerror = () => img.remove();
+    wrap.insertBefore(img, emoji);
+    // Dark gradient over image
+    wrap.style.background = 'var(--surface-alt)';
+    wrap.style.position = 'relative';
+    emoji.style.display = 'none';
+  } else {
+    emoji.style.display = 'block';
+    emoji.textContent = item.emoji || '🥙';
+  }
+
+  document.getElementById('sheetCat').textContent    = item.category || '';
+  document.getElementById('sheetName').textContent   = item.name     || '';
+  document.getElementById('sheetDesc').textContent   = item.description || 'A signature Dandoosh creation made fresh daily.';
+  document.getElementById('sheetPrice').textContent  = Number(item.price || 0).toLocaleString();
+  document.getElementById('sheetNutrPrice').textContent = Number(item.price || 0).toLocaleString();
+
+  // Badges
+  const badgeMap  = { bestseller:'⭐ Best Seller', spicy:'🌶 Spicy', premium:'👑 Premium', deal:'🎯 Deal' };
+  const badgeColor= { bestseller:'background:var(--gold);color:var(--dark)', spicy:'background:var(--red);color:#fff', premium:'background:linear-gradient(135deg,var(--gold),#b8860b);color:var(--dark)', deal:'background:var(--green);color:#fff' };
+  const badgesEl  = document.getElementById('sheetBadges');
+  badgesEl.innerHTML = '';
+  if (item.badge && badgeMap[item.badge]) {
+    const b = document.createElement('span');
+    b.style.cssText = `${badgeColor[item.badge]};font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .65rem;font-weight:800;`;
+    b.textContent = badgeMap[item.badge];
+    badgesEl.appendChild(b);
+  }
+
+  // Add to cart button
+  const addBtn = document.getElementById('sheetAddBtn');
+  if (item.soldOut) {
+    addBtn.disabled = true;
+    addBtn.textContent = 'Sold Out';
+    addBtn.style.background = 'var(--muted)';
+    addBtn.style.clipPath = 'none';
+  } else {
+    addBtn.disabled = false;
+    addBtn.textContent = 'Add to Cart 🔥';
+    addBtn.style.background = '';
+    addBtn.style.clipPath = '';
+    addBtn.onclick = () => {
+      addToCart(id, item.name, item.price, item.image||'', item.emoji||'🥙');
+      closeItemSheet();
+    };
+  }
+
+  document.getElementById('itemSheetBg').classList.add('on');
+  document.getElementById('itemSheet').classList.add('on');
+  document.body.style.overflow = 'hidden';
+};
+window.closeItemSheet = () => {
+  document.getElementById('itemSheetBg').classList.remove('on');
+  document.getElementById('itemSheet').classList.remove('on');
+  document.body.style.overflow = '';
+};
+// Swipe down to close
+let sheetTouchY = 0;
+document.getElementById('itemSheet').addEventListener('touchstart', e => { sheetTouchY = e.touches[0].clientY; }, { passive:true });
+document.getElementById('itemSheet').addEventListener('touchend', e => {
+  if (e.changedTouches[0].clientY - sheetTouchY > 80) closeItemSheet();
+}, { passive:true });
 
 // ── FLAME CANVAS ─────────────────────────────────────────────
 (function initFlame(){
