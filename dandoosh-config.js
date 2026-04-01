@@ -6,10 +6,10 @@
 const DANDOOSH = window.DANDOOSH = {
 
   // ── IDENTITY ──────────────────────────────────────────────
-  name:        "Dandoosh",
-  nameArabic:  "دندوش",
-  tagline:     "Where Arabic Meets Desi",
-  description: "Experience the fusion of authentic Arabic flavors with the bold spices of desi cuisine. Every bite tells a story of two cultures, one legendary taste.",
+  name:        "Tempura Potato",
+  nameArabic:  " ٹمپورا پوٹیٹو 
+  tagline:     "Quality Food Best price",
+  description: "Experience the fusion of authentic Pakisani flavors with the bold spices of desi cuisine. Every bite tells a story of two cultures, one legendary taste.",
   established: "2022",
   city:        "Lahore, Pakistan",
 
